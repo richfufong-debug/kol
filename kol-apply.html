@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KOL 推薦合作申請｜杜金龍 四季贏家選股策略班｜富豐企管</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700;900&family=Noto+Sans+TC:wght@300;400;500;700&family=Oswald:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --gold:#C9A84C;--gold-l:#F0D080;--gold-d:#8B6914;
+  --red:#C0392B;--ink:#0E0B05;--ink2:#1A1208;--ink3:#2C1F0A;
+  --cream:#FAF6EE;--gray:#7A6E5F;
+  --green:#27AE60;--green-l:#2ECC71;
+  --border:rgba(201,168,76,0.22);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--ink);color:var(--cream);font-family:"Noto Sans TC",sans-serif;line-height:1.6;}
+
+/* HEADER BAR */
+.topbar{background:linear-gradient(90deg,#7B0000,#C0392B,#7B0000);padding:10px 20px;text-align:center;font-size:13px;font-weight:700;letter-spacing:1px;color:#fff;border-bottom:2px solid var(--gold);}
+.topbar a{color:var(--gold-l);text-decoration:none;}
+.topbar a:hover{text-decoration:underline;}
+
+/* HERO */
+.hero{background:radial-gradient(ellipse at 50% 0%,#1A2800 0%,#0D1A00 45%,#0E0B05 100%);padding:52px 20px 44px;text-align:center;border-bottom:2px solid var(--gold);position:relative;overflow:hidden;}
+.hero::before{content:"推";position:absolute;font-family:"Noto Serif TC",serif;font-weight:900;font-size:480px;color:rgba(201,168,76,.025);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;}
+.org-badge{display:inline-block;background:var(--green);color:#fff;font-size:11px;font-weight:700;letter-spacing:3px;padding:5px 16px;margin-bottom:14px;}
+.hero h1{font-family:"Noto Serif TC",serif;font-weight:900;font-size:clamp(32px,7vw,68px);line-height:1.1;color:var(--cream);}
+.hero h1 em{color:var(--gold);font-style:normal;}
+.hdivider{width:120px;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:22px auto;}
+.hero-sub{font-size:14px;color:rgba(250,246,238,.6);letter-spacing:1px;line-height:2;max-width:560px;margin:0 auto;}
+.hero-sub strong{color:var(--gold-l);}
+
+/* WRAP */
+.wrap{max-width:680px;margin:0 auto;padding:0 20px;}
+
+/* PERKS */
+.perks{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;margin:36px 0 0;}
+.perk{background:linear-gradient(160deg,#1A2800,#0D1208);border:1px solid var(--border);padding:22px 16px;text-align:center;}
+.perk-icon{font-size:28px;margin-bottom:8px;}
+.perk-title{font-family:"Noto Serif TC",serif;font-size:14px;font-weight:700;color:var(--gold);margin-bottom:4px;letter-spacing:1px;}
+.perk-desc{font-size:12px;color:rgba(250,246,238,.5);line-height:1.7;}
+
+/* FORM CARD */
+.form-card{background:linear-gradient(160deg,#1A2208,#0E0B05);border:1px solid var(--gold);padding:36px 36px 32px;margin:32px 0 48px;}
+.form-title{font-family:"Noto Serif TC",serif;font-size:20px;font-weight:700;color:var(--gold);letter-spacing:3px;margin-bottom:6px;}
+.form-subtitle{font-size:13px;color:rgba(250,246,238,.45);margin-bottom:28px;letter-spacing:1px;}
+
+.frow{margin-bottom:20px;}
+label{display:block;font-size:12px;font-weight:700;letter-spacing:2px;color:var(--gold);margin-bottom:7px;}
+input,select{width:100%;background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--cream);font-family:"Noto Sans TC",sans-serif;font-size:15px;padding:12px 14px;outline:none;transition:border-color .2s;}
+input:focus,select:focus{border-color:var(--gold);}
+input::placeholder{color:rgba(250,246,238,.25);}
+select{cursor:pointer;}
+select option{background:#1A1208;color:var(--cream);}
+
+.frow-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+
+/* Platform tag row */
+.platform-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:4px;}
+.ptag{background:rgba(255,255,255,.04);border:1px solid var(--border);padding:10px 8px;text-align:center;cursor:pointer;font-size:13px;color:rgba(250,246,238,.6);transition:all .2s;user-select:none;}
+.ptag:hover{border-color:var(--gold);color:var(--cream);}
+.ptag.on{border-color:var(--green);background:rgba(39,174,96,.1);color:var(--green-l);font-weight:700;}
+
+/* Handle row */
+.handle-wrap{display:flex;align-items:center;gap:0;}
+.handle-prefix{background:rgba(201,168,76,.1);border:1px solid var(--border);border-right:none;padding:12px 14px;font-size:15px;color:var(--gold);white-space:nowrap;}
+.handle-wrap input{border-left:none;}
+
+/* SUBMIT */
+.sub-btn{width:100%;padding:16px;background:linear-gradient(135deg,var(--gold-d),var(--gold),var(--gold-l));color:var(--ink);font-family:"Noto Sans TC",sans-serif;font-size:16px;font-weight:700;letter-spacing:3px;border:none;cursor:pointer;clip-path:polygon(10px 0%,100% 0%,calc(100% - 10px) 100%,0% 100%);transition:box-shadow .2s;margin-top:8px;}
+.sub-btn:hover{box-shadow:0 8px 32px rgba(201,168,76,.4);}
+.sub-btn:disabled{opacity:.5;cursor:not-allowed;}
+
+.err{font-size:13px;color:#FF8A80;margin-top:10px;display:none;}
+.err.on{display:block;}
+
+/* SUCCESS OVERLAY */
+.sov{position:fixed;inset:0;background:rgba(14,11,5,.96);display:flex;align-items:center;justify-content:center;z-index:999;opacity:0;pointer-events:none;transition:opacity .3s;}
+.sov.on{opacity:1;pointer-events:all;}
+.sbox{background:linear-gradient(160deg,#1A2208,#0E0B05);border:2px solid var(--gold);padding:48px 40px;text-align:center;max-width:420px;width:90%;}
+.si{font-size:56px;margin-bottom:16px;}
+.sbox h2{font-family:"Noto Serif TC",serif;font-size:26px;font-weight:900;color:var(--gold);margin-bottom:12px;}
+.sbox p{font-size:14px;color:rgba(250,246,238,.7);line-height:2;margin-bottom:8px;}
+.sbox .back-btn{display:inline-block;margin-top:20px;padding:12px 28px;background:rgba(201,168,76,.15);border:1px solid var(--gold);color:var(--gold);font-size:13px;font-weight:700;letter-spacing:2px;text-decoration:none;cursor:pointer;}
+.sbox .back-btn:hover{background:rgba(201,168,76,.28);}
+
+/* FOOTER */
+.footer{text-align:center;padding:28px 20px 40px;font-size:12px;color:rgba(250,246,238,.3);letter-spacing:1px;line-height:2.2;border-top:1px solid var(--border);margin-top:12px;}
+
+@media(max-width:560px){
+  .perks{grid-template-columns:1fr;}
+  .frow-2{grid-template-columns:1fr;}
+  .platform-grid{grid-template-columns:repeat(2,1fr);}
+  .form-card{padding:24px 18px 20px;}
+}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  ← <a href="register.html">返回報名頁</a>&nbsp;&nbsp;｜&nbsp;&nbsp;KOL 推薦合作申請
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="org-badge">KOL PARTNER PROGRAM</div>
+  <h1>成為<em>推薦夥伴</em><br>帶粉絲一起贏</h1>
+  <div class="hdivider"></div>
+  <p class="hero-sub">申請專屬推薦碼，每成功帶一位粉絲報名<br><strong>杜金龍 四季贏家選股策略班</strong>，即可獲得豐厚佣金回饋</p>
+</div>
+
+<!-- PERKS -->
+<div class="wrap">
+  <div class="perks">
+    <div class="perk">
+      <div class="perk-icon">🎯</div>
+      <div class="perk-title">專屬推薦碼</div>
+      <div class="perk-desc">審核通過後獲得個人專屬碼，粉絲報名時輸入即自動綁定</div>
+    </div>
+    <div class="perk">
+      <div class="perk-icon">💰</div>
+      <div class="perk-title">佣金回饋</div>
+      <div class="perk-desc">每筆成功報名均有佣金，審核後由專員與您確認比例</div>
+    </div>
+    <div class="perk">
+      <div class="perk-icon">📊</div>
+      <div class="perk-title">即時追蹤</div>
+      <div class="perk-desc">推薦人數與佣金狀態由專員定期回報，透明清楚</div>
+    </div>
+  </div>
+</div>
+
+<!-- FORM -->
+<div class="wrap">
+  <div class="form-card">
+    <div class="form-title">申請加入</div>
+    <div class="form-subtitle">填寫以下資料，專員將於 2 個工作天內與您聯繫</div>
+
+    <div class="frow-2">
+      <div class="frow">
+        <label>姓名 *</label>
+        <input type="text" id="f-name" placeholder="您的真實姓名">
+      </div>
+      <div class="frow">
+        <label>聯絡電話 *</label>
+        <input type="tel" id="f-phone" placeholder="09xx-xxx-xxx">
+      </div>
+    </div>
+
+    <div class="frow">
+      <label>Email *</label>
+      <input type="email" id="f-email" placeholder="your@email.com">
+    </div>
+
+    <div class="frow">
+      <label>社群平台 *</label>
+      <div class="platform-grid">
+        <div class="ptag" onclick="togglePlatform(this)" data-val="Instagram">📸 Instagram</div>
+        <div class="ptag" onclick="togglePlatform(this)" data-val="YouTube">▶️ YouTube</div>
+        <div class="ptag" onclick="togglePlatform(this)" data-val="Facebook">📘 Facebook</div>
+        <div class="ptag" onclick="togglePlatform(this)" data-val="TikTok">🎵 TikTok</div>
+        <div class="ptag" onclick="togglePlatform(this)" data-val="Podcast">🎙️ Podcast</div>
+        <div class="ptag" onclick="togglePlatform(this)" data-val="其他">✦ 其他</div>
+      </div>
+    </div>
+
+    <div class="frow">
+      <label>社群帳號 / 頻道名稱 *</label>
+      <div class="handle-wrap">
+        <span class="handle-prefix">@</span>
+        <input type="text" id="f-handle" placeholder="您的帳號或頻道名稱">
+      </div>
+    </div>
+
+    <div id="errMsg" class="err"></div>
+
+    <button class="sub-btn" id="subBtn" onclick="submitForm()">立即送出申請</button>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  主辦單位｜<strong>富豐企管顧問有限公司</strong><br>
+  報名專線｜<strong>台北 02-2331-8260</strong>｜<strong>台中 &amp; 高雄 04-3506-5968</strong>
+</div>
+
+<!-- SUCCESS -->
+<div class="sov" id="sov">
+  <div class="sbox">
+    <div class="si">📨</div>
+    <h2>申請已送出！</h2>
+    <p>您的推薦碼（審核中）：</p>
+    <div style="font-family:'Oswald',sans-serif;font-size:38px;font-weight:700;color:#7A6E5F;letter-spacing:6px;margin:16px 0;padding:14px 24px;border:2px solid #7A6E5F;background:rgba(122,110,95,.08);" id="generatedCode">---</div>
+    <p>審核通過後推薦碼將立即啟用<br>並顯示於報名頁面的下拉選單中</p>
+    <p style="margin-top:12px;font-size:12px;color:rgba(250,246,238,.4);">
+      專員將於 2 個工作天內與您聯繫確認佣金細節<br>
+      📞 台北 02-2331-8260｜台中&amp;高雄 04-3506-5968
+    </p>
+    <a class="back-btn" href="register.html">← 返回報名頁</a>
+  </div>
+</div>
+
+<script>
+const API = '';
+let selectedPlatforms = [];
+
+function togglePlatform(el) {
+  const val = el.dataset.val;
+  if (el.classList.contains('on')) {
+    el.classList.remove('on');
+    selectedPlatforms = selectedPlatforms.filter(p => p !== val);
+  } else {
+    el.classList.add('on');
+    selectedPlatforms.push(val);
+  }
+}
+
+async function submitForm() {
+  const btn = document.getElementById('subBtn');
+  const err = document.getElementById('errMsg');
+  const name   = document.getElementById('f-name').value.trim();
+  const phone  = document.getElementById('f-phone').value.trim();
+  const email  = document.getElementById('f-email').value.trim();
+  const handle = document.getElementById('f-handle').value.trim();
+
+  // Validation
+  if (!name || !phone || !email || !handle || selectedPlatforms.length === 0) {
+    err.textContent = '請完整填寫所有必填欄位，並選擇至少一個社群平台';
+    err.classList.add('on');
+    return;
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    err.textContent = 'Email 格式不正確';
+    err.classList.add('on');
+    return;
+  }
+
+  err.classList.remove('on');
+  btn.disabled = true;
+  btn.textContent = '⟳ 送出中...';
+
+  const body = {
+    name,
+    phone,
+    email,
+    platform: selectedPlatforms.join(', '),
+    handle,
+  };
+
+  try {
+    const res = await fetch(API + '/api/kol-apply', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    const d = await res.json();
+    if (!res.ok) throw new Error(d.error || '送出失敗，請稍後再試');
+    // Show the generated referral code in the success overlay
+    document.getElementById('generatedCode').textContent = d.referral_code;
+    document.getElementById('sov').classList.add('on');
+  } catch (ex) {
+    err.textContent = ex.message;
+    err.classList.add('on');
+    btn.disabled = false;
+    btn.textContent = '立即送出申請';
+  }
+}
+</script>
+</body>
+</html>
