@@ -18,3 +18,18 @@
   from = "/api/register"
   to = "/.netlify/functions/register"
   status = 200
+
+[[redirects]]
+  from = "/api/kol-apply"
+  to = "/.netlify/functions/kol-apply"
+  status = 200
+
+[[redirects]]
+  from = "/api/kol-approve"
+  to = "/.netlify/functions/kol-approve"
+  status = 200
+
+[[redirects]]
+  from = "/api/kol-reject"
+  to = "/.netlify/functions/kol-reject"
+  status = 200
