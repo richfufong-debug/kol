@@ -1,0 +1,20 @@
+[build]
+  functions = "netlify/functions"
+  publish = "."
+
+# Map clean API paths → Netlify Functions
+
+[[redirects]]
+  from = "/api/kols/list"
+  to = "/.netlify/functions/kols-list"
+  status = 200
+
+[[redirects]]
+  from = "/api/kols/validate/:code"
+  to = "/.netlify/functions/kols-validate?code=:code"
+  status = 200
+
+[[redirects]]
+  from = "/api/register"
+  to = "/.netlify/functions/register"
+  status = 200
