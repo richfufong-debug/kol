@@ -586,8 +586,8 @@ document.getElementById('regForm').addEventListener('submit',async function(e){
     if(!res.ok)throw new Error(d.error||'報名失敗');
 
     // Credit card → redirect to payment gateway after saving to DB
-    if(pay==='credit_card'){
-      window.location.href=aCode?PAYMENT_URLS['kol']:PAYMENT_URLS['solo'];
+if(pay==='刷卡'){
+        window.location.href=aCode?PAYMENT_URLS['kol']:PAYMENT_URLS['solo'];
       return;
     }
 
