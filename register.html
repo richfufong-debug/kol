@@ -531,23 +531,17 @@ async function loadKOLs(){
 }
 
 // Validate referral code
-async function valCode(){
+function valCode(){
   const sel=document.getElementById('f-kol-sel');
   const el=document.getElementById('cr-sel');
   const code=sel.value.trim();
   if(!code){el.className='cr';el.textContent='';applyDisc(null,0);return;}
-  el.className='cr ok';el.textContent='⟳ 驗證中...';
-  try{
-    const d=await(await fetch(API+'/api/kols/validate/'+code)).json();
-    if(d.valid){
-      el.className='cr ok';el.textContent='✓ 有效｜'+d.kol.username+' — 折扣 NT$'+KD.toLocaleString();
-      applyDisc(code,KD);
-    }else{el.className='cr err';el.textContent='✕ 優惠碼無效或已過期';applyDisc(null,0);}
-  }catch(e){
-    el.className='cr ok';el.textContent='✓ KOL 折扣 NT$'+KD.toLocaleString()+' 已套用';
-    applyDisc(code,KD);
-  }
+  const kolName=sel.options[sel.selectedIndex].textContent.split(' (')[0];
+  el.className='cr ok';
+  el.textContent='✓ KOL 折扣 NT$'+KD.toLocaleString()+' 已套用｜'+kolName;
+  applyDisc(code,KD);
 }
+
 
 function applyDisc(c,a){
   aCode=c;aDisc=a;
