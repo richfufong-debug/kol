@@ -573,7 +573,7 @@ document.getElementById('regForm').addEventListener('submit',async function(e){
     session:sess,
     is_member:member,
     region,
-    payment:pay,
+payment:pay==='刷卡'?'credit_card':pay==='匯款'?'transfer':pay,
     referral_code:aCode||null,
     ticket_type:selectedTicket,
     ticket_tier_id:selectedTicket==='kol'?1:2,
