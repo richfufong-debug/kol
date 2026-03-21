@@ -576,7 +576,7 @@ document.getElementById('regForm').addEventListener('submit',async function(e){
   if(!member||!region||!pay||!sess){err.textContent='請完整填寫所有必選欄位';err.classList.add('on');return;}
   btn.disabled=true;btn.textContent='⟳ 處理中...';err.classList.remove('on');
 
-const base=9800;
+  const base=selectedTicket==='kol'?4500:18000;
   const body={
     name:document.getElementById('f-name').value.trim(),
     email:document.getElementById('f-email').value.trim(),
@@ -597,8 +597,8 @@ const base=9800;
     if(!res.ok)throw new Error(d.error||'報名失敗');
 
     // Credit card → redirect to payment gateway after saving to DB
- if(pay==='credit_card'){
-      window.location.href=aCode?PAYMENT_URLS['kol']:PAYMENT_URLS['solo'];
+    if(pay==='credit_card'){
+      window.location.href=PAYMENT_URLS[selectedTicket];
       return;
     }
 
