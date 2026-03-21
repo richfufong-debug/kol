@@ -411,15 +411,10 @@ label{display:block;font-size:13px;color:rgba(250,246,238,.7);letter-spacing:1px
 
       <div class="fg">
         <label>網紅 / KOL 優惠碼 <span class="opt">（選填，輸入後再折 NT$4,500）</span></label>
-        <div class="code-row">
-          <input type="text" class="fi" id="f-code" placeholder="輸入優惠碼（例：SEAN2026）" style="text-transform:uppercase">
-          <button type="button" class="vbtn" onclick="valCode('txt')">驗證</button>
-        </div>
-        <div class="cr" id="cr-txt"></div>
-        <div class="odiv">或從下方選擇 KOL</div>
-        <div class="sw">
-          <select class="fs" id="f-kol-sel" onchange="valCode('sel')">
-            <option value="">— 選擇推薦 KOL（動態載入）—</option>
+             <div class="sw">
+
+<select class="fs" id="f-kol-sel" onchange="valCode()">
+              <option value="">— 選擇推薦 KOL（動態載入）—</option>
           </select>
         </div>
         <div class="cr" id="cr-sel"></div>
@@ -576,7 +571,7 @@ document.getElementById('regForm').addEventListener('submit',async function(e){
   if(!member||!region||!pay||!sess){err.textContent='請完整填寫所有必選欄位';err.classList.add('on');return;}
   btn.disabled=true;btn.textContent='⟳ 處理中...';err.classList.remove('on');
 
-  const base=selectedTicket==='kol'?4500:18000;
+ const base=9800;
   const body={
     name:document.getElementById('f-name').value.trim(),
     email:document.getElementById('f-email').value.trim(),
@@ -598,7 +593,7 @@ document.getElementById('regForm').addEventListener('submit',async function(e){
 
     // Credit card → redirect to payment gateway after saving to DB
     if(pay==='credit_card'){
-      window.location.href=PAYMENT_URLS[selectedTicket];
+      window.location.href=aCode?PAYMENT_URLS['kol']:PAYMENT_URLS['solo'];
       return;
     }
 
@@ -607,7 +602,7 @@ document.getElementById('regForm').addEventListener('submit',async function(e){
     document.getElementById('sov').classList.add('on');
   }catch(ex){
     err.textContent=ex.message;err.classList.add('on');
-    btn.disabled=false;btn.innerHTML='立即完成報名 — NT$<span id="btnAmt">'+Math.max(0,base-aDisc).toLocaleString()+'</span>';
+    btn.disabled=false;btn.innerHTML='立即完成報名 — NT$<span id="btnAmt">'+Math.max(0,9800-aDisc).toLocaleString()+'</span>';
   }
 });
 
