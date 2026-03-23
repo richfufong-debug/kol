@@ -44,3 +44,8 @@
   from = "/api/payment-callback"
   to = "/.netlify/functions/payment-callback"
   status = 200
+# Dynamic payment form generator
+[[redirects]]
+  from = "/api/create-payment"
+  to = "/.netlify/functions/create-payment"
+  status = 200
