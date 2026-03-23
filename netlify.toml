@@ -3,7 +3,12 @@
   publish = "."
 
 # Map clean API paths → Netlify Functions
-
+# Homepage → register page
+[[redirects]]
+  from = "/"
+  to = "/register.html"
+  status = 200
+  
 [[redirects]]
   from = "/api/kols/list"
   to = "/.netlify/functions/kols-list"
