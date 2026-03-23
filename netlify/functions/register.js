@@ -49,6 +49,8 @@ exports.handler = async (event) => {
     payment,
     referral_code,
     ticket_type,
+    ticket_tier_id,
+    quantity,
   } = body;
 
   // Validation
@@ -76,16 +78,12 @@ exports.handler = async (event) => {
     };
   }
 
-  // ─── Pricing ──────────────────────────────────────────────────
-  // solo → standard single ticket NT$9,800
-  // kol  → KOL discounted ticket  NT$4,500 (~50% off)
-  // basePrice is always 9,800 (the listed original price)
-  const PRICE_SOLO     = 9800;
-  const PRICE_KOL      = 4500;
-  const basePrice      = PRICE_SOLO;
-  const finalPrice     = ticket_type === "kol" ? PRICE_KOL : PRICE_SOLO;
-  const discountAmount = basePrice - finalPrice; // 5300 for kol, 0 for solo
-  // ─────────────────────────────────────────────────────────────
+  // Calculate price
+  // kol = NT$4,500 single ticket | solo = NT$18,000 four-pack
+  const KOL_DISCOUNT = 4500;
+  const basePrice = ticket_type === "kol" ? 4500 : 18000;
+  const discountAmount = referral_code ? KOL_DISCOUNT : 0;
+  const finalPrice = Math.max(0, basePrice - discountAmount);
 
   const order_no = genOrderNo();
 
@@ -97,9 +95,9 @@ exports.handler = async (event) => {
   try {
     await client.connect();
 
-    // Verify referral code is valid if provided (kol ticket only)
+    // Verify referral code is valid if provided
     let validatedReferral = null;
-    if (ticket_type === "kol" && referral_code) {
+    if (referral_code) {
       const kolCheck = await client.query(
         `SELECT referral_code FROM kols WHERE referral_code = $1 AND is_active = true LIMIT 1`,
         [referral_code.toUpperCase()]
@@ -113,9 +111,9 @@ exports.handler = async (event) => {
     await client.query(
       `INSERT INTO registrations
          (order_no, name, email, phone, session_date, is_member, region,
-          payment_method, referral_code, ticket_type,
-          base_price, discount_amount, final_price, created_at)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,NOW())`,
+          payment_method, referral_code, ticket_type, ticket_tier_id,
+          quantity, base_price, discount_amount, final_price, created_at)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,NOW())`,
       [
         order_no,
         name.trim(),
@@ -127,6 +125,8 @@ exports.handler = async (event) => {
         payment,
         validatedReferral,
         ticket_type,
+        ticket_tier_id || (ticket_type === "kol" ? 1 : 2),
+        quantity || 1,
         basePrice,
         discountAmount,
         finalPrice,
