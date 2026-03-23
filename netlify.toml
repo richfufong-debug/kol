@@ -33,3 +33,9 @@
   from = "/api/kol-reject"
   to = "/.netlify/functions/kol-reject"
   status = 200
+
+# ✅ NEW: NewebPay payment webhook (NotifyURL)
+[[redirects]]
+  from = "/api/payment-callback"
+  to = "/.netlify/functions/payment-callback"
+  status = 200
