@@ -1,31 +1,34 @@
 // netlify/functions/create-payment.js
 // Route: POST /api/create-payment
-//
-// Called after /api/register succeeds (credit card only).
-// Generates a NewebPay AES+SHA256 signed payment form and returns
-// the action URL + hidden fields so the browser can POST directly to NewebPay.
+// Builds and signs the NewebPay MPG TradeInfo payload
 //
 // Required env vars:
-//   NEWEBPAY_MERCHANT_ID   — your merchant ID e.g. MS3386778646
+//   NEWEBPAY_MERCHANT_ID   — MS3386778646
 //   NEWEBPAY_HASH_KEY      — from NewebPay dashboard
 //   NEWEBPAY_HASH_IV       — from NewebPay dashboard
 //   SITE_URL               — e.g. https://yoursite.netlify.app
+//   NEWEBPAY_ENV           — "production" | "sandbox" (default sandbox)
 
 const crypto = require("crypto");
 
+// NewebPay endpoints
+const GATEWAY = {
+  production: "https://core.newebpay.com/MPG/mpg_gateway",
+  sandbox:    "https://ccore.newebpay.com/MPG/mpg_gateway",
+};
+
+// AES-256-CBC encrypt → hex string
 function aesEncrypt(data, key, iv) {
   const cipher = crypto.createCipheriv(
     "aes-256-cbc",
     Buffer.from(key, "utf8"),
-    Buffer.from(iv, "utf8")
+    Buffer.from(iv,  "utf8")
   );
-  let encrypted = cipher.update(data, "utf8", "hex");
-  encrypted += cipher.final("hex");
-  return encrypted;
+  return cipher.update(data, "utf8", "hex") + cipher.final("hex");
 }
 
-function sha256Sign(tradeInfo, key, iv) {
-  const str = `HashKey=${key}&${tradeInfo}&HashIV=${iv}`;
+// SHA256 hash for TradeSha
+function sha256(str) {
   return crypto.createHash("sha256").update(str).digest("hex").toUpperCase();
 }
 
@@ -63,37 +66,59 @@ exports.handler = async (event) => {
     return {
       statusCode: 400,
       headers: { "Access-Control-Allow-Origin": "*" },
-      body: JSON.stringify({ error: "Missing required fields" }),
+      body: JSON.stringify({ error: "Missing required payment fields" }),
     };
   }
 
-  const merchantId = process.env.NEWEBPAY_MERCHANT_ID;
-  const hashKey   = process.env.NEWEBPAY_HASH_KEY;
-  const hashIv    = process.env.NEWEBPAY_HASH_IV;
-  const siteUrl   = process.env.SITE_URL || "";
+  // Ensure amount is a positive integer (NewebPay requires no decimals)
+  const amt = parseInt(amount, 10);
+  if (!amt || amt <= 0) {
+    return {
+      statusCode: 400,
+      headers: { "Access-Control-Allow-Origin": "*" },
+      body: JSON.stringify({ error: "Invalid amount" }),
+    };
+  }
+
+  const MERCHANT_ID = process.env.NEWEBPAY_MERCHANT_ID || "MS3386778646";
+  const HASH_KEY    = process.env.NEWEBPAY_HASH_KEY;
+  const HASH_IV     = process.env.NEWEBPAY_HASH_IV;
+  const SITE_URL    = process.env.SITE_URL || "";
+  const ENV         = process.env.NEWEBPAY_ENV === "production" ? "production" : "sandbox";
+
+  if (!HASH_KEY || !HASH_IV) {
+    return {
+      statusCode: 500,
+      headers: { "Access-Control-Allow-Origin": "*" },
+      body: JSON.stringify({ error: "Payment gateway not configured" }),
+    };
+  }
 
   // Build TradeInfo query string
   const tradeParams = new URLSearchParams({
-    MerchantID:      merchantId,
+    MerchantID:      MERCHANT_ID,
     RespondType:     "JSON",
     TimeStamp:       Math.floor(Date.now() / 1000).toString(),
-    TransAmt:        String(amount),
-    MerchantOrderNo: order_no,          // ← this comes back in webhook
+    Version:         "2.0",               // ← must be exactly "2.0"
+    MerchantOrderNo: order_no,
+    Amt:             amt.toString(),       // integer, no NT$ symbol
     ItemDesc:        description || "杜金龍四季贏家選股策略班",
     Email:           email,
     LoginType:       "0",
-    NotifyURL:       `${siteUrl}/api/payment-callback`,  // webhook (background)
-    ReturnURL:       `${siteUrl}/payment-return.html`,   // browser redirect after payment
-    ClientBackURL:   `${siteUrl}/register.html`,
-    CREDIT:          "1",               // enable credit card
-  }).toString();
+    ReturnURL:       `${SITE_URL}/payment-result.html`,
+    NotifyURL:       `${SITE_URL}/api/payment-callback`,
+    ClientBackURL:   `${SITE_URL}/register.html`,
+  });
 
-  const tradeInfo = aesEncrypt(tradeParams, hashKey, hashIv);
-  const tradeSha  = sha256Sign(tradeInfo, hashKey, hashIv);
+  const tradeInfoStr = tradeParams.toString();
 
-  // NewebPay production endpoint
-  // For testing use: https://ccore.newebpay.com/MPG/mpg_gateway
-  const actionUrl = "https://core.newebpay.com/MPG/mpg_gateway";
+  // AES encrypt
+  const TradeInfo = aesEncrypt(tradeInfoStr, HASH_KEY, HASH_IV);
+
+  // SHA256 hash
+  const TradeSha = sha256(
+    `HashKey=${HASH_KEY}&TradeInfo=${TradeInfo}&HashIV=${HASH_IV}`
+  );
 
   return {
     statusCode: 200,
@@ -102,11 +127,11 @@ exports.handler = async (event) => {
       "Access-Control-Allow-Origin": "*",
     },
     body: JSON.stringify({
-      action:      actionUrl,
-      MerchantID:  merchantId,
-      TradeInfo:   tradeInfo,
-      TradeSha:    tradeSha,
-      Version:     "2.0",
+      action:     GATEWAY[ENV],
+      MerchantID: MERCHANT_ID,
+      TradeInfo,
+      TradeSha,
+      Version:    "2.0",
     }),
   };
 };
