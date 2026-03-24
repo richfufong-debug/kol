@@ -255,8 +255,8 @@ label{display:block;font-size:13px;color:rgba(250,246,238,.7);letter-spacing:1px
 
 <!-- URGENCY BAR -->
 <div class="urgency">
-  ⚡ 早鳥優惠 <span class="hl">NT$4,500</span>｜定價 NT$9,800｜截止後恢復原價
-  <span class="cd" id="cd">計算中...</span>
+  ⚡ KOL 優惠 <span class="hl">NT$4,500</span>｜定價 NT$9,800｜輸入推薦碼立享五折
+  <span class="cd" id="cd"></span>
 </div>
 
 <!-- HERO -->
@@ -307,35 +307,27 @@ label{display:block;font-size:13px;color:rgba(250,246,238,.7);letter-spacing:1px
         <div class="tc-badge-wrap"><span class="tc-badge solo-badge">標準票價</span></div>
         <div class="tc-icon">🎟</div>
         <div class="tc-name">單張購票</div>
-        <div class="tc-orig">原價 NT$9,800</div>
         <div class="tc-price solo-price">NT$9,800</div>
-        <div class="tc-note">網站直接購買</div>
+        <div class="tc-note">直接線上報名</div>
         <button class="tc-btn solo-btn" onclick="selectTicket('solo');scrollToForm()">立即購票</button>
       </div>
 
       <!-- KOL -->
       <div class="tcard tcard-featured" id="tc-kol" onclick="selectTicket('kol')">
         <div class="tc-ribbon">🔥 最優惠</div>
-        <div class="tc-badge-wrap"><span class="tc-badge kol-badge">KOL 網紅折扣碼優惠價</span></div>
+        <div class="tc-badge-wrap"><span class="tc-badge kol-badge">KOL 網紅推薦優惠</span></div>
         <div class="tc-icon">🎁</div>
         <div class="tc-name">KOL 優惠票</div>
         <div class="tc-orig">原價 NT$9,800</div>
         <div class="tc-price kol-price">NT$4,500</div>
         <div class="tc-discount-tag">五折優惠</div>
-        <div class="tc-note">輸入網紅優惠碼即享折扣</div>
+        <div class="tc-note">選擇推薦 KOL 即享折扣</div>
         <button class="tc-btn kol-btn" onclick="selectTicket('kol');scrollToForm()">立即購票</button>
       </div>
 
     </div>
   </div>
-  <div class="bundle">
-    <div class="bun-lbl">📦 四套課程超值方案（全四場入場）</div>
-    <div class="bun-prices">
-      <div class="bun-item orig"><div class="bi-l">原價</div><div class="bi-v">$49,000</div></div>
-      <div class="bun-item disc"><div class="bi-l">優惠價</div><div class="bi-v">$18,000</div></div>
-      <div class="bun-item early"><div class="bi-l">早鳥價</div><div class="bi-v">$15,800</div></div>
-    </div>
-  </div>
+
 
   <!-- PAYMENT IMAGE -->
   <div class="payment-img-wrap">
@@ -401,26 +393,23 @@ label{display:block;font-size:13px;color:rgba(250,246,238,.7);letter-spacing:1px
       <div class="fg">
         <label>付款方式 <span class="req">*</span></label>
         <div class="rg" style="flex-direction:column;gap:8px;">
-          <label class="ri"><input type="radio" name="pay" value="匯款" required><span>現金轉帳／匯款 <strong style="color:var(--gold)">早鳥 $4,500 ／ 四套 $15,800</strong>（請看上方匯款資訊）</span></label>
-          <label class="ri"><input type="radio" name="pay" value="刷卡"><span>信用卡刷卡繳費 <strong style="color:var(--orange)">定價 $9,800 ／ 四套 $18,000</strong>（提交後將寄出刷卡連結）</span></label>
+          <label class="ri"><input type="radio" name="pay" value="匯款" required><span>現金轉帳／匯款（請看上方匯款資訊）</span></label>
+          <label class="ri"><input type="radio" name="pay" value="刷卡"><span>信用卡線上刷卡 <strong style="color:var(--orange)">（提交後跳轉刷卡頁面）</strong></span></label>
         </div>
       </div>
 
-      <div class="fg">
-        <label>網紅 / KOL 優惠碼 <span class="opt">（選填，輸入後再折 NT$4,500）</span></label>
-             <div class="sw">
-
-<select class="fs" id="f-kol-sel" onchange="valCode()">
-              <option value="">— 選擇推薦 KOL（動態載入）—</option>
-          </select>
+      <div class="fg" id="kol-section">
+        <label>推薦 KOL <span class="opt">（選填，選擇後折扣至 NT$4,500）</span></label>
+        <div id="kol-list-wrap" style="border:1px solid var(--border);background:rgba(255,255,255,.02);max-height:220px;overflow-y:auto;">
+          <div id="kol-loading" style="padding:14px 16px;font-size:13px;color:rgba(250,246,238,.4);">⟳ 載入 KOL 名單中...</div>
         </div>
         <div class="cr" id="cr-sel"></div>
-        <div style="font-size:11px;color:rgba(250,246,238,.28);margin-top:6px;">✦ 有效優惠碼再折 NT$4,500，早鳥搭配最低 NT$0</div>
+        <div style="font-size:11px;color:rgba(250,246,238,.28);margin-top:6px;">✦ 選擇推薦 KOL 後票價折扣為 NT$4,500（不論付款方式）</div>
       </div>
 
       <div class="ps">
         <div class="psr"><span class="psl">課程票價</span><span class="psv" id="ps-base">NT$9,800</span></div>
-        <div class="psr disc" id="ps-disc" style="display:none"><span class="psl">🎁 網紅優惠碼折扣</span><span class="psv">－ NT$4,500</span></div>
+        <div class="psr disc" id="ps-disc" style="display:none"><span class="psl">🎁 KOL 推薦折扣</span><span class="psv">－ NT$5,300</span></div>
         <div class="psr tot"><span class="psl">應付金額</span><span class="psv" id="ps-tot">NT$9,800</span></div>
       </div>
 
@@ -462,7 +451,7 @@ label{display:block;font-size:13px;color:rgba(250,246,238,.7);letter-spacing:1px
   報名專線｜<strong>台北 02-2331-8260</strong>｜<strong>台中 &amp; 高雄 04-3506-5968</strong>
 </div>
 
-<!-- SUCCESS -->
+<!-- SUCCESS (transfer) -->
 <div class="sov" id="sov">
   <div class="sbox">
     <div class="si">🎉</div>
@@ -477,78 +466,149 @@ label{display:block;font-size:13px;color:rgba(250,246,238,.7);letter-spacing:1px
   </div>
 </div>
 
-<script>
+<!-- SUCCESS + REDIRECT (credit card) -->
+<div class="sov" id="sov-cc">
+  <div class="sbox">
+    <div class="si">✅</div>
+    <h2>訂單已建立！</h2>
+    <p>您的報名訂單編號：</p>
+    <div class="obadge" id="orderNo-cc">---</div>
+    <p style="margin-top:12px;">即將跳轉至信用卡付款頁面…</p>
+    <p style="font-size:13px;color:rgba(250,246,238,.5);margin-top:8px;">若未自動跳轉，請點下方按鈕</p>
+    <a id="cc-pay-link" href="#" target="_blank" style="display:inline-block;margin-top:18px;padding:13px 32px;background:linear-gradient(135deg,#8B6914,#C9A84C,#F0D080);color:#0E0B05;font-weight:700;font-size:14px;letter-spacing:2px;text-decoration:none;">前往刷卡頁面 →</a>
+  </div>
+</div>
+
 <script>
 const API='';
-const KD=4500;
+// Payment links
+const CC_LINK_KOL  = 'https://core.newebpay.com/EPG/MS3386778646/lczJLq'; // KOL 4500
+const CC_LINK_SOLO = 'REPLACE_WITH_9800_PAYMENT_LINK';                      // Solo 9800 (replace later)
 
-let aCode=null, aDisc=0, selectedTicket='solo';
+let aCode=null, selectedTicket='solo';
+
+// ── KOL list styles ──────────────────────────────────────────
+const kolItemStyle = `
+  display:flex;align-items:center;justify-content:space-between;
+  padding:11px 16px;border-bottom:1px solid rgba(201,168,76,.1);
+  cursor:pointer;transition:background .15s;font-size:14px;
+`;
 
 function selectTicket(type){
   selectedTicket=type;
   document.getElementById('tc-solo').classList.toggle('selected',type==='solo');
   document.getElementById('tc-kol').classList.toggle('selected',type==='kol');
-  const base=type==='kol'?4500:18000;
-  document.getElementById('ps-tot').textContent='NT$'+base.toLocaleString();
-  document.getElementById('btnAmt').textContent=base.toLocaleString();
-  if(type==='solo'){aCode=null;aDisc=0;document.getElementById('ps-disc').style.display='none';}
+  // KOL ticket always = 4500; solo always = 9800
+  // If KOL ticket selected, auto-select a KOL (or show reminder)
+  updatePriceSummary();
+  // Show/hide KOL section hint
+  const kolSec = document.getElementById('kol-section');
+  kolSec.style.border = type==='kol' ? '1px solid rgba(39,174,96,.4)' : '';
+  kolSec.style.padding = type==='kol' ? '14px' : '';
+  kolSec.style.background = type==='kol' ? 'rgba(39,174,96,.04)' : '';
 }
+
 function scrollToForm(){
   setTimeout(()=>document.querySelector('.form-card').scrollIntoView({behavior:'smooth',block:'start'}),100);
 }
 
-function tick(){
-  const dl=new Date('2026-03-31T23:59:59+08:00');
-  const df=dl-new Date();
-  if(df<=0){document.getElementById('cd').textContent='早鳥截止';return;}
-  const d=Math.floor(df/86400000),h=Math.floor(df%86400000/3600000),m=Math.floor(df%3600000/60000),s=Math.floor(df%60000/1000);
-  document.getElementById('cd').textContent=d+'天 '+String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+function updatePriceSummary(){
+  const base = 9800;
+  const isKol = selectedTicket==='kol' && aCode;
+  const disc = isKol ? 5300 : 0;
+  const final = base - disc;
+  document.getElementById('ps-base').textContent = 'NT$'+base.toLocaleString();
+  const discRow = document.getElementById('ps-disc');
+  if(disc > 0){
+    discRow.style.display='flex';
+    discRow.querySelector('.psv').textContent = '－ NT$'+disc.toLocaleString();
+  } else {
+    discRow.style.display='none';
+  }
+  document.getElementById('ps-tot').textContent = 'NT$'+final.toLocaleString();
+  document.getElementById('btnAmt').textContent = final.toLocaleString();
 }
-setInterval(tick,1000);tick();
-
-document.getElementById('f-sess').value='2026/05/03';
 
 async function loadKOLs(){
+  const wrap = document.getElementById('kol-list-wrap');
   try{
-    const ks=await(await fetch(API+'/api/kols/list')).json();
-    const sel=document.getElementById('f-kol-sel');
-    ks.forEach(k=>{const o=document.createElement('option');o.value=k.referral_code;o.textContent=k.username+' ('+k.referral_code+')';sel.appendChild(o);});
-  }catch(e){}
+    const ks = await(await fetch(API+'/api/kols/list')).json();
+    wrap.innerHTML = '';
+    if(!ks || ks.length===0){
+      wrap.innerHTML='<div style="padding:14px 16px;font-size:13px;color:rgba(250,246,238,.4);">目前無可用 KOL 名單</div>';
+      return;
+    }
+    // "None" option
+    const none = document.createElement('div');
+    none.style.cssText = kolItemStyle + 'color:rgba(250,246,238,.5);';
+    none.setAttribute('data-code','');
+    none.innerHTML = '<span>— 不使用推薦 KOL —</span><span style="font-size:12px;color:rgba(250,246,238,.3);">原價 NT$9,800</span>';
+    none.addEventListener('click',()=>selectKOL('',none,''));
+    wrap.appendChild(none);
+
+    ks.forEach(k=>{
+      const row = document.createElement('div');
+      row.style.cssText = kolItemStyle;
+      row.setAttribute('data-code', k.referral_code);
+      row.innerHTML = `
+        <span style="color:var(--cream);">
+          <strong style="color:var(--gold-l);">${k.username}</strong>
+          <span style="font-size:11px;color:rgba(250,246,238,.35);margin-left:8px;">${k.referral_code}</span>
+        </span>
+        <span style="color:var(--green-l);font-size:13px;font-weight:700;">NT$4,500</span>
+      `;
+      row.addEventListener('mouseenter',()=>{ if(!row.classList.contains('kol-selected')) row.style.background='rgba(201,168,76,.07)'; });
+      row.addEventListener('mouseleave',()=>{ if(!row.classList.contains('kol-selected')) row.style.background=''; });
+      row.addEventListener('click',()=>selectKOL(k.referral_code, row, k.username));
+      wrap.appendChild(row);
+    });
+  }catch(e){
+    wrap.innerHTML='<div style="padding:14px 16px;font-size:13px;color:rgba(250,246,238,.35);">無法載入 KOL 名單，請重新整理頁面</div>';
+  }
 }
 
-function valCode(){
-  const sel=document.getElementById('f-kol-sel');
-  const el=document.getElementById('cr-sel');
-  const code=sel.value.trim();
-  if(!code){el.className='cr';el.textContent='';applyDisc(null,0);return;}
-  const kolName=sel.options[sel.selectedIndex].textContent.split(' (')[0];
-  el.className='cr ok';
-  el.textContent='✓ KOL 折扣 NT$'+KD.toLocaleString()+' 已套用｜'+kolName;
-  applyDisc(code,KD);
-}
+function selectKOL(code, el, name){
+  // Deselect all
+  document.querySelectorAll('#kol-list-wrap [data-code]').forEach(r=>{
+    r.classList.remove('kol-selected');
+    r.style.background='';
+    r.style.borderLeft='';
+  });
+  el.classList.add('kol-selected');
+  el.style.background = code ? 'rgba(39,174,96,.1)' : 'rgba(201,168,76,.07)';
+  el.style.borderLeft = code ? '3px solid var(--green-l)' : '3px solid rgba(201,168,76,.4)';
 
-function applyDisc(c,a){
-  aCode=c;aDisc=a;
-  const base=selectedTicket==='kol'?4500:18000;
-  const f=Math.max(0,base-a);
-  document.getElementById('ps-base').textContent='NT$'+base.toLocaleString();
-  document.getElementById('ps-disc').style.display=a>0?'flex':'none';
-  document.getElementById('ps-tot').textContent='NT$'+f.toLocaleString();
-  document.getElementById('btnAmt').textContent=f.toLocaleString();
+  const crEl = document.getElementById('cr-sel');
+  if(code){
+    aCode = code;
+    // Switch ticket to KOL type automatically
+    selectedTicket = 'kol';
+    document.getElementById('tc-solo').classList.remove('selected');
+    document.getElementById('tc-kol').classList.add('selected');
+    crEl.className='cr ok';
+    crEl.textContent='✓ 已選擇 '+name+'（'+code+'）— 折扣後 NT$4,500';
+  } else {
+    aCode = null;
+    crEl.className='cr';
+    crEl.textContent='';
+  }
+  updatePriceSummary();
 }
 
 document.getElementById('regForm').addEventListener('submit',async function(e){
   e.preventDefault();
-  const btn=document.getElementById('subBtn'),err=document.getElementById('errMsg');
+  const btn=document.getElementById('subBtn'), err=document.getElementById('errMsg');
   const member=document.querySelector('input[name=member]:checked')?.value;
   const region=document.querySelector('input[name=region]:checked')?.value;
   const pay=document.querySelector('input[name=pay]:checked')?.value;
   const sess=document.getElementById('f-sess').value;
   if(!member||!region||!pay||!sess){err.textContent='請完整填寫所有必選欄位';err.classList.add('on');return;}
-  btn.disabled=true;btn.textContent='⟳ 處理中...';err.classList.remove('on');
+  btn.disabled=true; btn.textContent='⟳ 處理中...'; err.classList.remove('on');
 
-  const basePrice=selectedTicket==='kol'?4500:18000;
-  const finalPrice=Math.max(0,basePrice-aDisc);
+  const isKol = selectedTicket==='kol' && aCode;
+  const basePrice = 9800;
+  const discountAmount = isKol ? 5300 : 0;
+  const finalPrice = basePrice - discountAmount;
 
   const body={
     name:document.getElementById('f-name').value.trim(),
@@ -557,63 +617,44 @@ document.getElementById('regForm').addEventListener('submit',async function(e){
     session:sess,
     is_member:member,
     region,
-    payment:pay==='刷卡'?'credit_card':pay==='匯款'?'transfer':pay,
+    payment:pay==='刷卡'?'credit_card':'transfer',
     referral_code:aCode||null,
-    ticket_type:selectedTicket,
-    ticket_tier_id:selectedTicket==='kol'?1:2,
-    quantity:selectedTicket==='solo'?4:1
+    ticket_type: isKol ? 'kol' : 'solo',
+    ticket_tier_id: isKol ? 1 : 2,
+    quantity: 1
   };
 
   try{
-    // Step 1: Save registration to DB
+    // Step 1: Always save registration first
     const res=await fetch(API+'/api/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
     const d=await res.json();
-    if(!res.ok)throw new Error(d.error||'報名失敗');
+    if(!res.ok) throw new Error(d.error||'報名失敗');
 
     if(pay==='刷卡'){
-      // Step 2: Get signed payment form from backend
-      const pr=await fetch(API+'/api/create-payment',{
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({
-          order_no:   d.order_no,
-          amount:     finalPrice,
-          name:       body.name,
-          email:      body.email,
-          description:'杜金龍四季贏家選股策略班'
-        })
-      });
-      const pd=await pr.json();
-      if(!pr.ok)throw new Error('建立付款失敗，請稍後再試');
-
-      // Step 3: Auto-submit form to NewebPay
-      const form=document.createElement('form');
-      form.method='POST';
-      form.action=pd.action;
-      [['MerchantID',pd.MerchantID],['TradeInfo',pd.TradeInfo],
-       ['TradeSha',pd.TradeSha],['Version',pd.Version]].forEach(([k,v])=>{
-        const i=document.createElement('input');
-        i.type='hidden';i.name=k;i.value=v;
-        form.appendChild(i);
-      });
-      document.body.appendChild(form);
-      form.submit();
+      // Credit card: show order confirm overlay, then redirect to payment
+      const ccLink = isKol ? CC_LINK_KOL : CC_LINK_SOLO;
+      document.getElementById('orderNo-cc').textContent = d.order_no;
+      document.getElementById('cc-pay-link').href = ccLink;
+      document.getElementById('sov-cc').classList.add('on');
+      // Auto-redirect after 2s
+      setTimeout(()=>{ window.location.href = ccLink; }, 2000);
       return;
     }
 
     // Transfer → show success overlay
-    document.getElementById('orderNo').textContent=d.order_no;
+    document.getElementById('orderNo').textContent = d.order_no;
     document.getElementById('sov').classList.add('on');
 
   }catch(ex){
-    err.textContent=ex.message;err.classList.add('on');
+    err.textContent=ex.message; err.classList.add('on');
     btn.disabled=false;
-    btn.innerHTML='立即完成報名 — NT$<span id="btnAmt">'+finalPrice.toLocaleString()+'</span>';
+    const fp = (selectedTicket==='kol'&&aCode)?4500:9800;
+    btn.innerHTML='立即完成報名 — NT$<span id="btnAmt">'+fp.toLocaleString()+'</span>';
   }
 });
 
 loadKOLs();
-</script>
+updatePriceSummary();
 </script>
 </body>
 </html>
