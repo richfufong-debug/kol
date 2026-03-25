@@ -2,7 +2,6 @@
 // Route: POST /api/register
 const { Client } = require("pg");
 
-// Generate order number: ORD-YYYYMMDD-XXXXXX
 function genOrderNo() {
   const now = new Date();
   const date = now.toISOString().slice(0, 10).replace(/-/g, "");
@@ -11,7 +10,6 @@ function genOrderNo() {
 }
 
 exports.handler = async (event) => {
-  // Handle CORS preflight
   if (event.httpMethod === "OPTIONS") {
     return {
       statusCode: 200,
@@ -51,6 +49,7 @@ exports.handler = async (event) => {
     ticket_type,
     ticket_tier_id,
     quantity,
+    five_numbers_bank,   // ← new field
   } = body;
 
   // Validation
@@ -78,10 +77,20 @@ exports.handler = async (event) => {
     };
   }
 
+  // Validate five_numbers_bank for transfer payments
+  if (payment === "transfer") {
+    if (!five_numbers_bank || !/^\d{5}$/.test(five_numbers_bank)) {
+      return {
+        statusCode: 400,
+        headers: { "Access-Control-Allow-Origin": "*" },
+        body: JSON.stringify({ error: "請填寫正確的匯款帳號後五碼（5位數字）" }),
+      };
+    }
+  }
+
   // Calculate price
-  // kol = NT$4,500 single ticket | solo = NT$18,000 four-pack
-  const KOL_DISCOUNT = 4500;
   const basePrice = ticket_type === "kol" ? 4500 : 18000;
+  const KOL_DISCOUNT = 4500;
   const discountAmount = referral_code ? KOL_DISCOUNT : 0;
   const finalPrice = Math.max(0, basePrice - discountAmount);
 
@@ -95,7 +104,7 @@ exports.handler = async (event) => {
   try {
     await client.connect();
 
-    // Verify referral code is valid if provided
+    // Verify referral code
     let validatedReferral = null;
     if (referral_code) {
       const kolCheck = await client.query(
@@ -107,13 +116,14 @@ exports.handler = async (event) => {
       }
     }
 
-    // Insert registration
+    // Insert registration — now includes five_numbers_bank
     await client.query(
       `INSERT INTO registrations
          (order_no, name, email, phone, session_date, is_member, region,
           payment_method, referral_code, ticket_type, ticket_tier_id,
-          quantity, base_price, discount_amount, final_price, created_at)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,NOW())`,
+          quantity, base_price, discount_amount, final_price,
+          five_numbers_bank, created_at)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,NOW())`,
       [
         order_no,
         name.trim(),
@@ -130,10 +140,11 @@ exports.handler = async (event) => {
         basePrice,
         discountAmount,
         finalPrice,
+        payment === "transfer" ? five_numbers_bank : null,  // ← only save for transfer
       ]
     );
 
-    // Increment KOL usage count if referral used
+    // Increment KOL usage count
     if (validatedReferral) {
       await client.query(
         `UPDATE kols SET usage_count = COALESCE(usage_count, 0) + 1 WHERE referral_code = $1`,
