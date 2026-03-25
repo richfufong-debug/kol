@@ -12,242 +12,209 @@
   --cream:#FAF6EE;--gray:#7A6E5F;
   --green:#27AE60;--green-l:#2ECC71;--orange:#E67E22;
   --border:rgba(201,168,76,0.22);
+  --section-gap:24px;   /* ← single source of truth for vertical rhythm */
+  --side-pad:20px;      /* ← single source of truth for horizontal padding */
 }
 *{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
 body{background:var(--ink);color:var(--cream);font-family:"Noto Sans TC",sans-serif;line-height:1.6;}
 
-/* URGENCY */
-.urgency{background:linear-gradient(90deg,#7B0000,#C0392B,#7B0000);padding:10px 20px;text-align:center;font-size:14px;font-weight:700;letter-spacing:1px;color:#fff;position:sticky;top:0;z-index:100;border-bottom:2px solid var(--gold);}
-.urgency .hl{color:var(--gold-l);}
-.cd{display:inline-block;background:rgba(0,0,0,.3);padding:2px 10px;margin-left:6px;font-family:"Oswald",sans-serif;font-size:15px;letter-spacing:3px;}
+/* ── LAYOUT SHELL ──────────────────────────────────────── */
+/* Every visible block lives inside .wrap or .full-bleed    */
+.wrap{
+  max-width:860px;
+  margin:0 auto;
+  padding:0 var(--side-pad);
+}
 
-/* HERO */
-.hero{background:radial-gradient(ellipse at 50% 0%,#3D1200 0%,#1A0800 45%,#0E0B05 100%);padding:52px 20px 44px;text-align:center;border-bottom:2px solid var(--gold);position:relative;overflow:hidden;}
-.hero::before{content:"贏";position:absolute;font-family:"Noto Serif TC",serif;font-weight:900;font-size:480px;color:rgba(201,168,76,.025);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;}
-.org-badge{display:inline-block;background:var(--red);color:#fff;font-size:11px;font-weight:700;letter-spacing:3px;padding:5px 16px;margin-bottom:14px;}
-.hero h1{font-family:"Noto Serif TC",serif;font-weight:900;font-size:clamp(40px,8vw,84px);line-height:1.0;color:var(--cream);}
+/* Sections that need a top gap use this utility class */
+.section{margin-top:var(--section-gap);}
+
+/* Images always fill the column width with a border */
+.img-block{
+  width:100%;
+  display:block;
+  border:1px solid var(--border);
+}
+
+/* ── URGENCY ───────────────────────────────────────────── */
+.urgency{
+  background:linear-gradient(90deg,#7B0000,#C0392B,#7B0000);
+  padding:10px 20px;text-align:center;font-size:14px;font-weight:700;
+  letter-spacing:1px;color:#fff;position:sticky;top:0;z-index:100;
+  border-bottom:2px solid var(--gold);
+}
+.urgency .hl{color:var(--gold-l);}
+.cd{display:inline-block;background:rgba(0,0,0,.3);padding:2px 10px;
+    margin-left:6px;font-family:"Oswald",sans-serif;font-size:15px;letter-spacing:3px;}
+
+/* ── HERO ──────────────────────────────────────────────── */
+.hero{
+  background:radial-gradient(ellipse at 50% 0%,#3D1200 0%,#1A0800 45%,#0E0B05 100%);
+  padding:52px 20px 44px;text-align:center;
+  border-bottom:2px solid var(--gold);position:relative;overflow:hidden;
+}
+.hero::before{content:"贏";position:absolute;font-family:"Noto Serif TC",serif;
+  font-weight:900;font-size:480px;color:rgba(201,168,76,.025);
+  top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;}
+.org-badge{display:inline-block;background:var(--red);color:#fff;font-size:11px;
+  font-weight:700;letter-spacing:3px;padding:5px 16px;margin-bottom:14px;}
+.hero h1{font-family:"Noto Serif TC",serif;font-weight:900;
+  font-size:clamp(40px,8vw,84px);line-height:1.0;color:var(--cream);}
 .hero h1 em{color:var(--gold);font-style:normal;}
-.hero h1 .tag{display:block;font-size:clamp(16px,2.5vw,22px);color:rgba(250,246,238,.55);font-weight:400;letter-spacing:5px;margin-top:10px;}
-.hdivider{width:120px;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:22px auto;}
+.hero h1 .tag{display:block;font-size:clamp(16px,2.5vw,22px);
+  color:rgba(250,246,238,.55);font-weight:400;letter-spacing:5px;margin-top:10px;}
+.hdivider{width:120px;height:2px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:22px auto;}
 .hero-meta{font-size:14px;color:rgba(250,246,238,.6);letter-spacing:1px;line-height:2;}
 .hero-meta strong{color:var(--gold-l);}
 
-/* SECTION WRAP */
-.wrap{max-width:860px;margin:0 auto;padding:0 20px;}
-
-/* PROMO IMAGE */
-.promo-img{width:100%;display:block;border:1px solid var(--border);}
-
-/* DATES */
-.dates-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:24px 0 6px;}
-.dc{background:linear-gradient(160deg,#2C1F06,#1A1208);border:1px solid var(--border);padding:18px 10px;text-align:center;cursor:pointer;transition:all .2s;position:relative;}
-.dc:hover,.dc.on{border-color:var(--gold);background:linear-gradient(160deg,#3D2C08,#241808);}
-.dc.on::after{content:"✓";position:absolute;top:6px;right:8px;font-size:11px;color:var(--gold);}
-.dc-date{font-family:"Oswald",sans-serif;font-size:18px;font-weight:700;color:var(--gold);line-height:1.2;}
-.dc-sub{font-size:11px;color:rgba(250,246,238,.45);margin-top:4px;letter-spacing:1px;}
-.dc-time{font-size:12px;color:rgba(250,246,238,.65);margin-top:5px;}
-.dates-hint{font-size:11px;color:rgba(250,246,238,.3);text-align:center;margin-bottom:20px;}
-
-/* PRICE STACK */
-.earlybird{background:linear-gradient(90deg,var(--gold-d),var(--gold),var(--gold-d));color:var(--ink);padding:13px 26px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
-.eb-l .eb-name{font-weight:700;font-size:14px;letter-spacing:2px;}
-.eb-l .eb-sub{font-size:12px;opacity:.75;}
-.eb-r{font-family:"Oswald",sans-serif;font-size:26px;font-weight:700;}
-
-.kol-bar{background:rgba(39,174,96,.08);border:1px solid rgba(39,174,96,.3);border-top:2px solid var(--green);padding:13px 20px;display:flex;align-items:center;gap:12px;font-size:14px;color:rgba(250,246,238,.8);}
-.kol-bar .ki{font-size:20px;flex-shrink:0;}
-
-.price-main{background:linear-gradient(135deg,#2C1F06,#1A1208);border:1px solid var(--gold);padding:26px 30px;display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center;}
-.pm-title{font-family:"Noto Serif TC",serif;font-size:18px;font-weight:700;color:var(--cream);margin-bottom:4px;}
-.pm-sub{font-size:13px;color:rgba(250,246,238,.5);line-height:1.8;}
-.pm-right{text-align:right;}
-.pm-orig{font-size:14px;color:var(--gray);text-decoration:line-through;}
-.pm-final{font-family:"Oswald",sans-serif;font-size:54px;font-weight:700;color:var(--gold);line-height:1;}
-.pm-final small{font-size:18px;font-family:"Noto Sans TC",sans-serif;font-weight:400;color:rgba(250,246,238,.4);}
-
-.bundle{background:rgba(192,57,43,.08);border:1px solid rgba(192,57,43,.3);padding:16px 22px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
-.bun-lbl{color:#FF8A80;font-weight:700;font-size:13px;letter-spacing:1px;}
-.bun-prices{display:flex;gap:24px;flex-wrap:wrap;}
-.bun-item{text-align:center;}
-.bun-item .bi-l{font-size:10px;color:var(--gray);letter-spacing:1px;}
-.bun-item .bi-v{font-family:"Oswald",sans-serif;font-size:19px;font-weight:700;}
-.bun-item.orig .bi-v{color:var(--gray);text-decoration:line-through;font-size:15px;}
-.bun-item.disc .bi-v{color:var(--orange);}
-.bun-item.early .bi-v{color:var(--gold);}
-
-/* PAYMENT IMAGE */
-.payment-img-wrap{margin-top:2px;border:1px solid var(--border);}
-.payment-img-wrap img{width:100%;display:block;}
-
-/* SPEAKER IMAGE */
-.speaker-img-wrap{margin-top:32px;border:1px solid var(--border);}
-.speaker-img-wrap img{width:100%;display:block;}
-
-/* SINGLE SESSION CARD */
-.single-session{background:linear-gradient(135deg,#2C1F06,#1A1208);border:2px solid var(--gold);padding:24px 28px;display:grid;grid-template-columns:auto 1fr auto;gap:24px;align-items:center;margin-bottom:10px;}
+/* ── SESSION CARD ──────────────────────────────────────── */
+.single-session{
+  background:linear-gradient(135deg,#2C1F06,#1A1208);
+  border:2px solid var(--gold);padding:24px 28px;
+  display:grid;grid-template-columns:auto 1fr auto;
+  gap:24px;align-items:center;
+}
 .ss-left{text-align:center;border-right:1px solid var(--border);padding-right:24px;}
-.ss-date{font-family:"Oswald",sans-serif;font-size:15px;font-weight:600;color:rgba(250,246,238,.5);line-height:1.1;}
+.ss-date{font-family:"Oswald",sans-serif;font-size:15px;font-weight:600;
+  color:rgba(250,246,238,.5);line-height:1.1;}
 .ss-date span{display:block;font-size:38px;font-weight:700;color:var(--gold);line-height:1;}
 .ss-day{font-size:12px;color:var(--gray);letter-spacing:2px;margin-top:4px;}
 .ss-time{font-family:"Oswald",sans-serif;font-size:20px;font-weight:600;color:var(--cream);margin-bottom:8px;}
 .ss-loc{font-size:13px;color:rgba(250,246,238,.6);line-height:1.8;}
 .ss-right{text-align:center;}
-.ss-tag{background:var(--red);color:#fff;font-size:11px;font-weight:700;letter-spacing:2px;padding:6px 14px;white-space:nowrap;}
+.ss-tag{background:var(--red);color:#fff;font-size:11px;font-weight:700;
+  letter-spacing:2px;padding:6px 14px;white-space:nowrap;}
+.dates-hint{font-size:11px;color:rgba(250,246,238,.3);text-align:center;
+  margin-top:8px;margin-bottom:4px;}
 
-/* TICKET SELECTOR */
-.ticket-section{margin:20px 0 4px;}
-.ticket-section-title{font-family:"Noto Serif TC",serif;font-size:15px;color:var(--gold);letter-spacing:3px;text-align:center;margin-bottom:14px;}
+/* ── TICKET SELECTOR ───────────────────────────────────── */
+.ticket-section{margin-top:var(--section-gap);}
+.ticket-section-title{font-family:"Noto Serif TC",serif;font-size:15px;
+  color:var(--gold);letter-spacing:3px;text-align:center;margin-bottom:14px;}
 .ticket-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px;}
-.tcard{background:linear-gradient(160deg,#1F1508,#0D0A04);border:2px solid var(--border);padding:28px 22px 24px;text-align:center;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;}
+.tcard{background:linear-gradient(160deg,#1F1508,#0D0A04);border:2px solid var(--border);
+  padding:28px 22px 24px;text-align:center;cursor:pointer;transition:all .2s;
+  position:relative;overflow:hidden;}
 .tcard:hover{border-color:var(--gold);transform:translateY(-2px);}
 .tcard.selected{border-color:var(--gold);background:linear-gradient(160deg,#2C1F06,#1A1208);}
 .tcard-featured{border-color:rgba(201,168,76,.45);}
 .tcard-featured.selected,.tcard-featured:hover{border-color:var(--gold);}
-
-.tc-ribbon{position:absolute;top:14px;right:-20px;background:var(--red);color:#fff;font-size:11px;font-weight:700;letter-spacing:1px;padding:4px 28px;transform:rotate(35deg);transform-origin:center;}
-
+.tc-ribbon{position:absolute;top:14px;right:-20px;background:var(--red);color:#fff;
+  font-size:11px;font-weight:700;letter-spacing:1px;padding:4px 28px;
+  transform:rotate(35deg);transform-origin:center;}
 .tc-badge-wrap{margin-bottom:12px;min-height:26px;}
 .tc-badge{display:inline-block;font-size:11px;font-weight:700;letter-spacing:1px;padding:4px 12px;}
 .solo-badge{background:rgba(201,168,76,.1);border:1px solid var(--border);color:var(--gray);}
 .kol-badge{background:rgba(39,174,96,.12);border:1px solid rgba(39,174,96,.35);color:var(--green-l);}
-
 .tc-icon{font-size:32px;margin-bottom:8px;}
-.tc-name{font-family:"Noto Serif TC",serif;font-size:18px;font-weight:700;color:var(--cream);margin-bottom:10px;}
+.tc-name{font-family:"Noto Serif TC",serif;font-size:18px;font-weight:700;
+  color:var(--cream);margin-bottom:10px;}
 .tc-orig{font-size:13px;color:var(--gray);text-decoration:line-through;margin-bottom:4px;}
 .tc-price{font-family:"Oswald",sans-serif;font-weight:700;line-height:1;margin-bottom:8px;}
 .solo-price{font-size:32px;color:rgba(250,246,238,.5);}
 .kol-price{font-size:44px;color:var(--gold);}
-.tc-discount-tag{display:inline-block;background:var(--red);color:#fff;font-size:12px;font-weight:700;letter-spacing:2px;padding:3px 12px;margin-bottom:8px;}
+.tc-discount-tag{display:inline-block;background:var(--red);color:#fff;font-size:12px;
+  font-weight:700;letter-spacing:2px;padding:3px 12px;margin-bottom:8px;}
 .tc-note{font-size:12px;color:rgba(250,246,238,.4);margin-bottom:18px;min-height:18px;}
-.tc-btn{width:100%;padding:13px;border:none;cursor:pointer;font-family:"Noto Sans TC",sans-serif;font-weight:700;font-size:14px;letter-spacing:2px;transition:all .2s;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);}
+.tc-btn{width:100%;padding:13px;border:none;cursor:pointer;font-family:"Noto Sans TC",sans-serif;
+  font-weight:700;font-size:14px;letter-spacing:2px;transition:all .2s;
+  clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);}
 .solo-btn{background:rgba(201,168,76,.15);border:1px solid var(--border);color:var(--gold);}
 .solo-btn:hover{background:rgba(201,168,76,.28);}
 .kol-btn{background:linear-gradient(135deg,var(--gold-d),var(--gold),var(--gold-l));color:var(--ink);}
 .kol-btn:hover{box-shadow:0 8px 28px rgba(201,168,76,.4);}
 
-/* SEASONS */
-.seasons-tagline{text-align:center;font-size:14px;color:rgba(250,246,238,.5);margin-bottom:28px;letter-spacing:1px;}
-.seasons-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:3px;margin-top:20px;}
-.sc{border:1px solid var(--border);padding:30px 26px;position:relative;overflow:hidden;transition:transform .2s,box-shadow .2s;}
-.sc:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,.4);}
-.sc.spring{background:linear-gradient(150deg,#0D1F0D,#081208);}
-.sc.summer{background:linear-gradient(150deg,#1F0D0D,#120808);}
-.sc.autumn{background:linear-gradient(150deg,#1F1408,#120E04);}
-.sc.winter{background:linear-gradient(150deg,#080D1F,#04081A);}
-.sc.spring{border-color:rgba(80,180,80,.25);}
-.sc.summer{border-color:rgba(220,60,60,.25);}
-.sc.autumn{border-color:rgba(210,140,30,.3);}
-.sc.winter{border-color:rgba(80,130,220,.25);}
-.sc-bg{position:absolute;top:-20px;right:-10px;font-size:110px;opacity:.06;pointer-events:none;line-height:1;}
-.sc-season{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
-.sc-icon{font-size:28px;}
-.sc-name{font-family:"Noto Serif TC",serif;font-size:22px;font-weight:900;}
-.sc.spring .sc-name{color:#6ECF6E;}
-.sc.summer .sc-name{color:#FF7070;}
-.sc.autumn .sc-name{color:#E8A830;}
-.sc.winter .sc-name{color:#7AB0F0;}
-.sc-sub{font-size:12px;letter-spacing:2px;opacity:.6;margin-left:2px;}
-.sc-divider{height:1px;margin-bottom:14px;}
-.sc.spring .sc-divider{background:linear-gradient(90deg,rgba(80,180,80,.4),transparent);}
-.sc.summer .sc-divider{background:linear-gradient(90deg,rgba(220,60,60,.4),transparent);}
-.sc.autumn .sc-divider{background:linear-gradient(90deg,rgba(210,140,30,.4),transparent);}
-.sc.winter .sc-divider{background:linear-gradient(90deg,rgba(80,130,220,.4),transparent);}
-.sc-points{list-style:none;}
-.sc-points li{font-size:13px;color:rgba(250,246,238,.75);padding:5px 0;display:flex;gap:8px;line-height:1.7;}
-.sc-points li::before{content:"▸";flex-shrink:0;margin-top:1px;}
-.sc.spring .sc-points li::before{color:#6ECF6E;}
-.sc.summer .sc-points li::before{color:#FF7070;}
-.sc.autumn .sc-points li::before{color:#E8A830;}
-.sc.winter .sc-points li::before{color:#7AB0F0;}
-
-/* FORM */
-.form-card{background:linear-gradient(160deg,#1F1508,#0D0A04);border:1px solid var(--border);padding:38px 34px;margin-top:32px;}
-.form-title{font-family:"Noto Serif TC",serif;font-size:18px;font-weight:700;color:var(--gold);margin-bottom:22px;padding-bottom:12px;border-bottom:1px solid var(--border);}
+/* ── FORM ──────────────────────────────────────────────── */
+.form-card{background:linear-gradient(160deg,#1F1508,#0D0A04);
+  border:1px solid var(--border);padding:38px 34px;}
+.form-title{font-family:"Noto Serif TC",serif;font-size:18px;font-weight:700;
+  color:var(--gold);margin-bottom:22px;padding-bottom:12px;border-bottom:1px solid var(--border);}
 .fg{margin-bottom:18px;}
 label{display:block;font-size:13px;color:rgba(250,246,238,.7);letter-spacing:1px;margin-bottom:7px;}
 .req{color:var(--red);margin-left:3px;}
 .opt{color:var(--gray);font-size:11px;margin-left:5px;}
-.fi,.fs{width:100%;background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--cream);font-family:"Noto Sans TC",sans-serif;font-size:15px;padding:12px 15px;outline:none;transition:border-color .2s,background .2s;appearance:none;-webkit-appearance:none;}
+.fi,.fs{width:100%;background:rgba(255,255,255,.04);border:1px solid var(--border);
+  color:var(--cream);font-family:"Noto Sans TC",sans-serif;font-size:15px;
+  padding:12px 15px;outline:none;transition:border-color .2s,background .2s;
+  appearance:none;-webkit-appearance:none;}
 .fi:focus,.fs:focus{border-color:var(--gold);background:rgba(201,168,76,.06);}
 .fi::placeholder{color:rgba(250,246,238,.22);}
 .fs option{background:#1A1208;}
 .sw{position:relative;}
-.sw::after{content:"▾";position:absolute;right:13px;top:50%;transform:translateY(-50%);color:var(--gold);pointer-events:none;}
+.sw::after{content:"▾";position:absolute;right:13px;top:50%;transform:translateY(-50%);
+  color:var(--gold);pointer-events:none;}
 .frow{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
 .rg{display:flex;flex-wrap:wrap;gap:10px;}
 .ri{display:flex;align-items:center;gap:7px;cursor:pointer;}
 .ri input[type=radio]{accent-color:var(--gold);width:15px;height:15px;}
 .ri span{font-size:14px;color:var(--cream);}
-.ri.col{flex-direction:column;align-items:flex-start;}
-
-/* Code input */
 .code-row{display:grid;grid-template-columns:1fr auto;gap:10px;}
-.vbtn{background:rgba(201,168,76,.12);border:1px solid var(--border);color:var(--gold);padding:0 16px;font-size:13px;cursor:pointer;font-family:inherit;letter-spacing:1px;transition:background .2s;}
+.vbtn{background:rgba(201,168,76,.12);border:1px solid var(--border);color:var(--gold);
+  padding:0 16px;font-size:13px;cursor:pointer;font-family:inherit;letter-spacing:1px;
+  transition:background .2s;}
 .vbtn:hover{background:rgba(201,168,76,.25);}
-.odiv{display:flex;align-items:center;gap:10px;margin:7px 0;font-size:11px;color:var(--gray);}
-.odiv::before,.odiv::after{content:"";flex:1;height:1px;background:var(--border);}
 .cr{margin-top:7px;font-size:13px;padding:8px 13px;display:none;}
-.cr.ok{display:flex;align-items:center;gap:7px;background:rgba(39,174,96,.1);border:1px solid rgba(39,174,96,.3);color:var(--green-l);}
-.cr.err{display:flex;align-items:center;gap:7px;background:rgba(192,57,43,.1);border:1px solid rgba(192,57,43,.3);color:#FF8A80;}
-
-/* Price summary */
+.cr.ok{display:flex;align-items:center;gap:7px;background:rgba(39,174,96,.1);
+  border:1px solid rgba(39,174,96,.3);color:var(--green-l);}
+.cr.err{display:flex;align-items:center;gap:7px;background:rgba(192,57,43,.1);
+  border:1px solid rgba(192,57,43,.3);color:#FF8A80;}
 .ps{background:rgba(201,168,76,.06);border:1px solid var(--border);padding:18px 20px;margin:22px 0;}
-.psr{display:flex;justify-content:space-between;align-items:center;font-size:14px;padding:5px 0;border-bottom:1px solid rgba(201,168,76,.08);}
+.psr{display:flex;justify-content:space-between;align-items:center;font-size:14px;
+  padding:5px 0;border-bottom:1px solid rgba(201,168,76,.08);}
 .psr:last-child{border:none;padding-top:10px;}
 .psl{color:rgba(250,246,238,.6);}
 .psv{color:var(--cream);font-weight:500;}
 .psr.tot .psl{color:var(--gold);font-weight:700;font-size:15px;}
 .psr.tot .psv{font-family:"Oswald",sans-serif;font-size:28px;color:var(--gold);font-weight:700;}
 .psr.disc .psv{color:var(--green-l);}
-
-.subbtn{width:100%;background:linear-gradient(135deg,var(--gold-d),var(--gold),var(--gold-l));color:var(--ink);font-family:"Noto Sans TC",sans-serif;font-weight:700;font-size:17px;letter-spacing:3px;padding:20px;border:none;cursor:pointer;clip-path:polygon(12px 0%,100% 0%,calc(100% - 12px) 100%,0% 100%);transition:transform .2s,box-shadow .2s;}
+.subbtn{width:100%;background:linear-gradient(135deg,var(--gold-d),var(--gold),var(--gold-l));
+  color:var(--ink);font-family:"Noto Sans TC",sans-serif;font-weight:700;font-size:17px;
+  letter-spacing:3px;padding:20px;border:none;cursor:pointer;
+  clip-path:polygon(12px 0%,100% 0%,calc(100% - 12px) 100%,0% 100%);
+  transition:transform .2s,box-shadow .2s;}
 .subbtn:hover{transform:translateY(-2px);box-shadow:0 10px 34px rgba(201,168,76,.36);}
 .subbtn:disabled{opacity:.5;cursor:not-allowed;transform:none;}
 .tnote{text-align:center;font-size:11px;color:rgba(250,246,238,.28);margin-top:11px;line-height:2;}
-.errmsg{display:none;background:rgba(192,57,43,.1);border:1px solid var(--red);color:#FF8A80;padding:11px 15px;font-size:13px;margin-top:11px;}
+.errmsg{display:none;background:rgba(192,57,43,.1);border:1px solid var(--red);
+  color:#FF8A80;padding:11px 15px;font-size:13px;margin-top:11px;}
 .errmsg.on{display:block;}
 
-/* NOTES IMAGE */
-.notes-img-wrap{margin-top:32px;border:1px solid var(--border);}
-.notes-img-wrap img{width:100%;display:block;}
-
-/* XIAO SECTION */
-.xiao-wrap{margin-top:32px;border:1px solid var(--border);}
-.xiao-wrap img{width:100%;display:block;}
-
-/* KOL CTA */
-.kol-cta{border:1px dashed var(--border);padding:20px 22px;text-align:center;margin-top:28px;}
+/* ── KOL CTA ───────────────────────────────────────────── */
+.kol-cta{border:1px dashed var(--border);padding:20px 22px;text-align:center;}
 .kol-cta p{font-size:13px;color:rgba(250,246,238,.45);margin-bottom:9px;}
-.kol-cta a{color:var(--gold);font-size:14px;font-weight:500;text-decoration:underline;text-underline-offset:4px;}
+.kol-cta a{color:var(--gold);font-size:14px;font-weight:500;
+  text-decoration:underline;text-underline-offset:4px;}
 
-/* FOOTER */
-.footer{background:var(--ink3);border-top:1px solid var(--border);padding:16px 20px;text-align:center;font-size:13px;color:rgba(250,246,238,.45);line-height:2;margin-top:0;}
+/* ── FOOTER ────────────────────────────────────────────── */
+.footer{background:var(--ink3);border-top:1px solid var(--border);padding:16px 20px;
+  text-align:center;font-size:13px;color:rgba(250,246,238,.45);line-height:2;}
 .footer strong{color:var(--gold);}
 
-/* SUCCESS */
-.sov{display:none;position:fixed;inset:0;background:rgba(10,7,0,.97);z-index:300;align-items:center;justify-content:center;padding:20px;}
+/* ── SUCCESS OVERLAYS ──────────────────────────────────── */
+.sov{display:none;position:fixed;inset:0;background:rgba(10,7,0,.97);z-index:300;
+  align-items:center;justify-content:center;padding:20px;}
 .sov.on{display:flex;}
-.sbox{background:linear-gradient(160deg,#2C1F06,#1A1208);border:1px solid var(--gold);padding:50px 42px;text-align:center;max-width:500px;width:100%;}
+.sbox{background:linear-gradient(160deg,#2C1F06,#1A1208);border:1px solid var(--gold);
+  padding:50px 42px;text-align:center;max-width:500px;width:100%;}
 .sbox .si{font-size:58px;margin-bottom:14px;}
-.sbox h2{font-family:"Noto Serif TC",serif;font-size:26px;font-weight:900;color:var(--gold);margin-bottom:10px;}
+.sbox h2{font-family:"Noto Serif TC",serif;font-size:26px;font-weight:900;
+  color:var(--gold);margin-bottom:10px;}
 .sbox p{font-size:14px;color:rgba(250,246,238,.7);line-height:2;margin-bottom:6px;}
-.obadge{display:inline-block;background:rgba(201,168,76,.1);border:1px solid var(--border);padding:9px 20px;font-family:"Oswald",sans-serif;font-size:20px;color:var(--gold);letter-spacing:3px;margin:13px 0;}
+.obadge{display:inline-block;background:rgba(201,168,76,.1);border:1px solid var(--border);
+  padding:9px 20px;font-family:"Oswald",sans-serif;font-size:20px;
+  color:var(--gold);letter-spacing:3px;margin:13px 0;}
 
-/* Section headers */
-.sec-label{font-size:11px;letter-spacing:5px;color:var(--gold);text-align:center;margin-bottom:9px;margin-top:36px;}
-.sec-h2{font-family:"Noto Serif TC",serif;font-size:clamp(20px,3vw,30px);font-weight:900;color:var(--cream);text-align:center;margin-bottom:20px;}
-.sec-h2 span{color:var(--gold);}
-
+/* ── RESPONSIVE ────────────────────────────────────────── */
 @media(max-width:640px){
-  .single-session{grid-template-columns:1fr;gap:14px;}.ss-left{border-right:none;border-bottom:1px solid var(--border);padding-right:0;padding-bottom:14px;}
-  .dates-grid{grid-template-columns:repeat(2,1fr);}
-  .price-main{grid-template-columns:1fr;}.pm-right{text-align:left;}
+  .single-session{grid-template-columns:1fr;gap:14px;}
+  .ss-left{border-right:none;border-bottom:1px solid var(--border);
+    padding-right:0;padding-bottom:14px;}
   .ticket-grid{grid-template-columns:1fr;}
-  .seasons-grid{grid-template-columns:1fr;}
-  .form-card{padding:22px 16px;}.frow{grid-template-columns:1fr;}
+  .form-card{padding:22px 16px;}
+  .frow{grid-template-columns:1fr;}
   .code-row{grid-template-columns:1fr;}
-  .earlybird{flex-direction:column;}
 }
 </style>
 </head>
@@ -273,29 +240,37 @@ label{display:block;font-size:13px;color:rgba(250,246,238,.7);letter-spacing:1px
   </div>
 </section>
 
-<!-- MAIN PROMO IMAGE -->
-<div class="wrap" style="margin-top:32px;">
-  <img src="https://ik.imagekit.io/xxoczs7zvz/main_promote.jpeg"
+<!-- ══════════════ ALL CONTENT IN ONE .wrap ══════════════ -->
+<div class="wrap">
 
-<!-- SESSION -->
-<div class="wrap" style="margin-top:28px;">
-  <div style="font-family:'Noto Serif TC',serif;font-size:16px;color:var(--gold);text-align:center;letter-spacing:3px;margin-bottom:14px;">📅 報名場次</div>
-
-  <!-- Single session card -->
-  <div class="single-session">
-    <div class="ss-left">
-      <div class="ss-date">2026 <span>05/03</span></div>
-      <div class="ss-day">週日</div>
-    </div>
-    <div class="ss-center">
-      <div class="ss-time">🕐 13:30 – 16:45</div>
-      <div class="ss-loc">📍 台北市中正區重慶南路一段10號 6F 608室<br><span style="font-size:12px;color:rgba(250,246,238,.4);">（台北車站 Z10 出口步行 3 分鐘）</span></div>
-    </div>
-    <div class="ss-right">
-      <div class="ss-tag">唯一場次</div>
-    </div>
+  <!-- MAIN PROMO IMAGE -->
+  <div class="section">
+    <img src="https://ik.imagekit.io/xxoczs7zvz/main_promote.jpeg" class="img-block" alt="課程宣傳">
   </div>
-  <div class="dates-hint" style="margin-bottom:20px;">本次活動僅此一場，額滿即止，請把握報名機會</div>
+
+  <!-- SESSION -->
+  <div class="section">
+    <div style="font-family:'Noto Serif TC',serif;font-size:16px;color:var(--gold);
+                text-align:center;letter-spacing:3px;margin-bottom:14px;">📅 報名場次</div>
+
+    <div class="single-session">
+      <div class="ss-left">
+        <div class="ss-date">2026 <span>05/03</span></div>
+        <div class="ss-day">週日</div>
+      </div>
+      <div class="ss-center">
+        <div class="ss-time">🕐 13:30 – 16:45</div>
+        <div class="ss-loc">
+          📍 台北市中正區重慶南路一段10號 6F 608室<br>
+          <span style="font-size:12px;color:rgba(250,246,238,.4);">（台北車站 Z10 出口步行 3 分鐘）</span>
+        </div>
+      </div>
+      <div class="ss-right">
+        <div class="ss-tag">唯一場次</div>
+      </div>
+    </div>
+    <div class="dates-hint">本次活動僅此一場，額滿即止，請把握報名機會</div>
+  </div>
 
   <!-- TICKET SELECTOR -->
   <div class="ticket-section">
@@ -328,125 +303,142 @@ label{display:block;font-size:13px;color:rgba(250,246,238,.7);letter-spacing:1px
     </div>
   </div>
 
-
   <!-- PAYMENT IMAGE -->
-  <div class="payment-img-wrap">
-    <img src="https://ik.imagekit.io/xxoczs7zvz/bank%20image.jpeg">
-</div>
-
-<!-- SPEAKER IMAGE -->
-<div class="wrap">
-  <div class="speaker-img-wrap">
-    <img src="https://ik.imagekit.io/xxoczs7zvz/speaker%20image.jpeg">
-</div>
-
-
-<!-- FORM -->
-<div class="wrap">
-  <div class="form-card">
-    <div class="form-title">📋 填寫報名資料</div>
-    <form id="regForm">
-
-      <div class="frow">
-        <div class="fg">
-          <label>姓名 <span class="req">*</span></label>
-          <input type="text" class="fi" id="f-name" placeholder="真實姓名（報到查驗用）" required>
-        </div>
-        <div class="fg">
-          <label>手機號碼 <span class="req">*</span></label>
-          <input type="tel" class="fi" id="f-phone" placeholder="09XX-XXX-XXX" required>
-        </div>
-      </div>
-
-      <div class="fg">
-        <label>電子信箱 <span class="req">*</span></label>
-        <input type="email" class="fi" id="f-email" placeholder="example@email.com（確認信寄送用）" required>
-      </div>
-
-      <div class="fg">
-        <label>報名場次 <span class="req">*</span></label>
-        <div class="sw">
-          <select class="fs" id="f-sess" required>
-            <option value="2026/05/03" selected>2026/05/03（週日）13:30–16:45｜唯一場次</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="fg">
-        <label>是否為富豐學員 <span class="req">*</span></label>
-        <div class="rg">
-          <label class="ri"><input type="radio" name="member" value="是" required><span>是，我是富豐學員</span></label>
-          <label class="ri"><input type="radio" name="member" value="否"><span>否，非學員報名</span></label>
-        </div>
-      </div>
-
-      <div class="fg">
-        <label>地區 <span class="req">*</span></label>
-        <div class="rg">
-          <label class="ri"><input type="radio" name="region" value="台北" required><span>台北學員</span></label>
-          <label class="ri"><input type="radio" name="region" value="台中"><span>台中學員</span></label>
-          <label class="ri"><input type="radio" name="region" value="高雄"><span>高雄學員</span></label>
-          <label class="ri"><input type="radio" name="region" value="非學員"><span>非學員報名</span></label>
-        </div>
-      </div>
-
-      <div class="fg">
-        <label>付款方式 <span class="req">*</span></label>
-        <div class="rg" style="flex-direction:column;gap:8px;">
-          <label class="ri"><input type="radio" name="pay" value="匯款" required><span>現金轉帳／匯款（請看上方匯款資訊）</span></label>
-          <label class="ri"><input type="radio" name="pay" value="刷卡"><span>信用卡線上刷卡 <strong style="color:var(--orange)">（提交後跳轉刷卡頁面）</strong></span></label>
-        </div>
-      </div>
-
-      <div class="fg" id="kol-section">
-        <label>推薦 KOL <span class="opt">（選填，選擇後折扣至 NT$4,500）</span></label>
-        <div id="kol-list-wrap" style="border:1px solid var(--border);background:rgba(255,255,255,.02);max-height:220px;overflow-y:auto;">
-          <div id="kol-loading" style="padding:14px 16px;font-size:13px;color:rgba(250,246,238,.4);">⟳ 載入 KOL 名單中...</div>
-        </div>
-        <div class="cr" id="cr-sel"></div>
-        <div style="font-size:11px;color:rgba(250,246,238,.28);margin-top:6px;">✦ 選擇推薦 KOL 後票價折扣為 NT$4,500（不論付款方式）</div>
-      </div>
-
-      <div class="ps">
-        <div class="psr"><span class="psl">課程票價</span><span class="psv" id="ps-base">NT$9,800</span></div>
-        <div class="psr disc" id="ps-disc" style="display:none"><span class="psl">🎁 KOL 推薦折扣</span><span class="psv">－ NT$5,300</span></div>
-        <div class="psr tot"><span class="psl">應付金額</span><span class="psv" id="ps-tot">NT$9,800</span></div>
-      </div>
-
-      <button type="submit" class="subbtn" id="subBtn">
-        立即完成報名 — NT$<span id="btnAmt">9,800</span>
-      </button>
-      <div class="errmsg" id="errMsg"></div>
-      <p class="tnote">
-        報名視同同意全部注意事項 · 刷卡完款超過七日後無法申請退款<br>
-        課程開始後恕無法退款 · 上課請攜帶身分證 · 全程禁止錄音錄影
-      </p>
-    </form>
+  <div class="section">
+    <img src="https://ik.imagekit.io/xxoczs7zvz/bank%20image.jpeg" class="img-block" alt="匯款資訊">
   </div>
-</div>
 
-<!-- NOTES IMAGE -->
-<div class="wrap">
-  <div class="notes-img-wrap">
-    <img src="https://ik.imagekit.io/xxoczs7zvz/notes-img-wrap.jpeg">
-</div>
-
-<!-- XIAO PROMO -->
-<div class="wrap" style="margin-top:32px;">
-  <div class="xiao-wrap">
-    <img src="https://ik.imagekit.io/xxoczs7zvz/xiao-wrap.jpeg">
-</div>
-
-<!-- KOL CTA -->
-<div class="wrap">
-  <div class="kol-cta">
-    <p>你是 KOL 或社群主嗎？申請專屬推薦碼，帶粉絲報名賺取佣金</p>
-    <a href="kol-apply.html">點此申請網紅推薦合作 →</a>
+  <!-- SPEAKER IMAGE -->
+  <div class="section">
+    <img src="https://ik.imagekit.io/xxoczs7zvz/speaker%20image.jpeg" class="img-block" alt="講師介紹">
   </div>
-</div>
+
+  <!-- FORM -->
+  <div class="section">
+    <div class="form-card">
+      <div class="form-title">📋 填寫報名資料</div>
+      <form id="regForm">
+
+        <div class="frow">
+          <div class="fg">
+            <label>姓名 <span class="req">*</span></label>
+            <input type="text" class="fi" id="f-name" placeholder="真實姓名（報到查驗用）" required>
+          </div>
+          <div class="fg">
+            <label>手機號碼 <span class="req">*</span></label>
+            <input type="tel" class="fi" id="f-phone" placeholder="09XX-XXX-XXX" required>
+          </div>
+        </div>
+
+        <div class="fg">
+          <label>電子信箱 <span class="req">*</span></label>
+          <input type="email" class="fi" id="f-email" placeholder="example@email.com（確認信寄送用）" required>
+        </div>
+
+        <div class="fg">
+          <label>報名場次 <span class="req">*</span></label>
+          <div class="sw">
+            <select class="fs" id="f-sess" required>
+              <option value="2026/05/03" selected>2026/05/03（週日）13:30–16:45｜唯一場次</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="fg">
+          <label>是否為富豐學員 <span class="req">*</span></label>
+          <div class="rg">
+            <label class="ri"><input type="radio" name="member" value="是" required><span>是，我是富豐學員</span></label>
+            <label class="ri"><input type="radio" name="member" value="否"><span>否，非學員報名</span></label>
+          </div>
+        </div>
+
+        <div class="fg">
+          <label>地區 <span class="req">*</span></label>
+          <div class="rg">
+            <label class="ri"><input type="radio" name="region" value="台北" required><span>台北學員</span></label>
+            <label class="ri"><input type="radio" name="region" value="台中"><span>台中學員</span></label>
+            <label class="ri"><input type="radio" name="region" value="高雄"><span>高雄學員</span></label>
+            <label class="ri"><input type="radio" name="region" value="非學員"><span>非學員報名</span></label>
+          </div>
+        </div>
+
+        <div class="fg">
+          <label>付款方式 <span class="req">*</span></label>
+          <div class="rg" style="flex-direction:column;gap:8px;">
+            <label class="ri"><input type="radio" name="pay" value="匯款" required><span>現金轉帳／匯款（請看上方匯款資訊）</span></label>
+            <label class="ri"><input type="radio" name="pay" value="刷卡"><span>信用卡線上刷卡 <strong style="color:var(--orange)">（提交後跳轉刷卡頁面）</strong></span></label>
+          </div>
+        </div>
+
+        <div class="fg" id="kol-section">
+          <label>推薦 KOL <span class="opt">（選填，選擇後折扣至 NT$4,500）</span></label>
+          <div id="kol-list-wrap" style="border:1px solid var(--border);background:rgba(255,255,255,.02);max-height:220px;overflow-y:auto;">
+            <div id="kol-loading" style="padding:14px 16px;font-size:13px;color:rgba(250,246,238,.4);">⟳ 載入 KOL 名單中...</div>
+          </div>
+          <div class="cr" id="cr-sel"></div>
+          <div style="font-size:11px;color:rgba(250,246,238,.28);margin-top:6px;">✦ 選擇推薦 KOL 後票價折扣為 NT$4,500（不論付款方式）</div>
+        </div>
+
+        <div class="ps">
+          <div class="psr"><span class="psl">課程票價</span><span class="psv" id="ps-base">NT$9,800</span></div>
+          <div class="psr disc" id="ps-disc" style="display:none"><span class="psl">🎁 KOL 推薦折扣</span><span class="psv">－ NT$5,300</span></div>
+          <div class="psr tot"><span class="psl">應付金額</span><span class="psv" id="ps-tot">NT$9,800</span></div>
+        </div>
+
+        <button type="submit" class="subbtn" id="subBtn">
+          立即完成報名 — NT$<span id="btnAmt">9,800</span>
+        </button>
+        <div class="errmsg" id="errMsg"></div>
+        <p class="tnote">
+          報名視同同意全部注意事項 · 刷卡完款超過七日後無法申請退款<br>
+          課程開始後恕無法退款 · 上課請攜帶身分證 · 全程禁止錄音錄影
+        </p>
+      </form>
+    </div>
+  </div>
+
+  <!-- NOTES IMAGE -->
+  <div class="section">
+    <img src="https://ik.imagekit.io/xxoczs7zvz/notes-img-wrap.jpeg" class="img-block" alt="注意事項">
+  </div>
+
+  <!-- XIAO PROMO SECTION -->
+  <div class="section">
+    <div class="ticket-section-title">贈送蕭董技術分析課程</div>
+    <img src="https://ik.imagekit.io/xxoczs7zvz/xiao-wrap.jpeg" class="img-block" alt="蕭董課程">
+  </div>
+
+  <div class="section">
+    <img src="https://ik.imagekit.io/xxoczs7zvz/S__11133047.jpg" class="img-block" alt="課程說明">
+  </div>
+
+  <div class="section">
+    <img src="https://ik.imagekit.io/xxoczs7zvz/7185CAB9-7BE8-4B82-BA59-19AAEF781F3F.jpg" class="img-block" alt="課程說明">
+  </div>
+
+  <div class="section">
+    <img src="https://ik.imagekit.io/xxoczs7zvz/47A35537-4156-4F72-88FC-DF7E609E8E02.jpg" class="img-block" alt="課程說明">
+  </div>
+
+  <!-- BOOK GIFT SECTION -->
+  <div class="section">
+    <div class="ticket-section-title">贈送杜老師講義300頁裝訂成冊書籍</div>
+    <img src="https://ik.imagekit.io/xxoczs7zvz/Gemini_Generated_Image_hjdphchjdphchjdp.png?tr=c-maintain_ratio,w-960,h-900"
+         class="img-block" alt="贈品書籍">
+  </div>
+
+  <!-- KOL CTA -->
+  <div class="section">
+    <div class="kol-cta">
+      <p>你是 KOL 或社群主嗎？申請專屬推薦碼，帶粉絲報名賺取佣金</p>
+      <a href="kol-apply.html">點此申請網紅推薦合作 →</a>
+    </div>
+  </div>
+
+</div><!-- /.wrap -->
 
 <!-- FOOTER -->
-<div class="footer" style="margin-top:32px;">
+<div class="footer" style="margin-top:var(--section-gap);">
   主辦單位｜<strong>富豐企管顧問有限公司</strong><br>
   報名專線｜<strong>台北 02-2331-8260</strong>｜<strong>台中 &amp; 高雄 04-3506-5968</strong>
 </div>
@@ -475,19 +467,22 @@ label{display:block;font-size:13px;color:rgba(250,246,238,.7);letter-spacing:1px
     <div class="obadge" id="orderNo-cc">---</div>
     <p style="margin-top:12px;">即將跳轉至信用卡付款頁面…</p>
     <p style="font-size:13px;color:rgba(250,246,238,.5);margin-top:8px;">若未自動跳轉，請點下方按鈕</p>
-    <a id="cc-pay-link" href="#" target="_blank" style="display:inline-block;margin-top:18px;padding:13px 32px;background:linear-gradient(135deg,#8B6914,#C9A84C,#F0D080);color:#0E0B05;font-weight:700;font-size:14px;letter-spacing:2px;text-decoration:none;">前往刷卡頁面 →</a>
+    <a id="cc-pay-link" href="#" target="_blank"
+       style="display:inline-block;margin-top:18px;padding:13px 32px;
+              background:linear-gradient(135deg,#8B6914,#C9A84C,#F0D080);
+              color:#0E0B05;font-weight:700;font-size:14px;letter-spacing:2px;text-decoration:none;">
+      前往刷卡頁面 →
+    </a>
   </div>
 </div>
 
 <script>
 const API='';
-// Payment links
-const CC_LINK_KOL  = 'https://core.newebpay.com/EPG/MS3386778646/lczJLq'; // KOL 4500
-const CC_LINK_SOLO = 'REPLACE_WITH_9800_PAYMENT_LINK';                      // Solo 9800 (replace later)
+const CC_LINK_KOL  = 'https://core.newebpay.com/EPG/MS3386778646/lczJLq';
+const CC_LINK_SOLO = 'https://core.newebpay.com/EPG/MS3386778646/zKBqtr';
 
 let aCode=null, selectedTicket='solo';
 
-// ── KOL list styles ──────────────────────────────────────────
 const kolItemStyle = `
   display:flex;align-items:center;justify-content:space-between;
   padding:11px 16px;border-bottom:1px solid rgba(201,168,76,.1);
@@ -498,14 +493,11 @@ function selectTicket(type){
   selectedTicket=type;
   document.getElementById('tc-solo').classList.toggle('selected',type==='solo');
   document.getElementById('tc-kol').classList.toggle('selected',type==='kol');
-  // KOL ticket always = 4500; solo always = 9800
-  // If KOL ticket selected, auto-select a KOL (or show reminder)
   updatePriceSummary();
-  // Show/hide KOL section hint
-  const kolSec = document.getElementById('kol-section');
-  kolSec.style.border = type==='kol' ? '1px solid rgba(39,174,96,.4)' : '';
-  kolSec.style.padding = type==='kol' ? '14px' : '';
-  kolSec.style.background = type==='kol' ? 'rgba(39,174,96,.04)' : '';
+  const kolSec=document.getElementById('kol-section');
+  kolSec.style.border=type==='kol'?'1px solid rgba(39,174,96,.4)':'';
+  kolSec.style.padding=type==='kol'?'14px':'';
+  kolSec.style.background=type==='kol'?'rgba(39,174,96,.04)':'';
 }
 
 function scrollToForm(){
@@ -513,53 +505,51 @@ function scrollToForm(){
 }
 
 function updatePriceSummary(){
-  const base = 9800;
-  const isKol = selectedTicket==='kol' && aCode;
-  const disc = isKol ? 5300 : 0;
-  const final = base - disc;
-  document.getElementById('ps-base').textContent = 'NT$'+base.toLocaleString();
-  const discRow = document.getElementById('ps-disc');
-  if(disc > 0){
+  const base=9800;
+  const isKol=selectedTicket==='kol'&&aCode;
+  const disc=isKol?5300:0;
+  const final=base-disc;
+  document.getElementById('ps-base').textContent='NT$'+base.toLocaleString();
+  const discRow=document.getElementById('ps-disc');
+  if(disc>0){
     discRow.style.display='flex';
-    discRow.querySelector('.psv').textContent = '－ NT$'+disc.toLocaleString();
-  } else {
+    discRow.querySelector('.psv').textContent='－ NT$'+disc.toLocaleString();
+  }else{
     discRow.style.display='none';
   }
-  document.getElementById('ps-tot').textContent = 'NT$'+final.toLocaleString();
-  document.getElementById('btnAmt').textContent = final.toLocaleString();
+  document.getElementById('ps-tot').textContent='NT$'+final.toLocaleString();
+  document.getElementById('btnAmt').textContent=final.toLocaleString();
 }
 
 async function loadKOLs(){
-  const wrap = document.getElementById('kol-list-wrap');
+  const wrap=document.getElementById('kol-list-wrap');
   try{
-    const ks = await(await fetch(API+'/api/kols/list')).json();
-    wrap.innerHTML = '';
-    if(!ks || ks.length===0){
+    const ks=await(await fetch(API+'/api/kols/list')).json();
+    wrap.innerHTML='';
+    if(!ks||ks.length===0){
       wrap.innerHTML='<div style="padding:14px 16px;font-size:13px;color:rgba(250,246,238,.4);">目前無可用 KOL 名單</div>';
       return;
     }
-    // "None" option
-    const none = document.createElement('div');
-    none.style.cssText = kolItemStyle + 'color:rgba(250,246,238,.5);';
+    const none=document.createElement('div');
+    none.style.cssText=kolItemStyle+'color:rgba(250,246,238,.5);';
     none.setAttribute('data-code','');
-    none.innerHTML = '<span>— 不使用推薦 KOL —</span><span style="font-size:12px;color:rgba(250,246,238,.3);">原價 NT$9,800</span>';
+    none.innerHTML='<span>— 不使用推薦 KOL —</span><span style="font-size:12px;color:rgba(250,246,238,.3);">原價 NT$9,800</span>';
     none.addEventListener('click',()=>selectKOL('',none,''));
     wrap.appendChild(none);
-
     ks.forEach(k=>{
-      const row = document.createElement('div');
-      row.style.cssText = kolItemStyle;
-      row.setAttribute('data-code', k.referral_code);
-      row.innerHTML = `
+      const row=document.createElement('div');
+      row.style.cssText=kolItemStyle;
+      row.setAttribute('data-code',k.referral_code);
+      row.innerHTML=`
         <span style="color:var(--cream);">
           <strong style="color:var(--gold-l);">${k.username}</strong>
           <span style="font-size:11px;color:rgba(250,246,238,.35);margin-left:8px;">${k.referral_code}</span>
         </span>
         <span style="color:var(--green-l);font-size:13px;font-weight:700;">NT$4,500</span>
       `;
-      row.addEventListener('mouseenter',()=>{ if(!row.classList.contains('kol-selected')) row.style.background='rgba(201,168,76,.07)'; });
-      row.addEventListener('mouseleave',()=>{ if(!row.classList.contains('kol-selected')) row.style.background=''; });
-      row.addEventListener('click',()=>selectKOL(k.referral_code, row, k.username));
+      row.addEventListener('mouseenter',()=>{if(!row.classList.contains('kol-selected'))row.style.background='rgba(201,168,76,.07)';});
+      row.addEventListener('mouseleave',()=>{if(!row.classList.contains('kol-selected'))row.style.background='';});
+      row.addEventListener('click',()=>selectKOL(k.referral_code,row,k.username));
       wrap.appendChild(row);
     });
   }catch(e){
@@ -567,28 +557,25 @@ async function loadKOLs(){
   }
 }
 
-function selectKOL(code, el, name){
-  // Deselect all
+function selectKOL(code,el,name){
   document.querySelectorAll('#kol-list-wrap [data-code]').forEach(r=>{
     r.classList.remove('kol-selected');
     r.style.background='';
     r.style.borderLeft='';
   });
   el.classList.add('kol-selected');
-  el.style.background = code ? 'rgba(39,174,96,.1)' : 'rgba(201,168,76,.07)';
-  el.style.borderLeft = code ? '3px solid var(--green-l)' : '3px solid rgba(201,168,76,.4)';
-
-  const crEl = document.getElementById('cr-sel');
+  el.style.background=code?'rgba(39,174,96,.1)':'rgba(201,168,76,.07)';
+  el.style.borderLeft=code?'3px solid var(--green-l)':'3px solid rgba(201,168,76,.4)';
+  const crEl=document.getElementById('cr-sel');
   if(code){
-    aCode = code;
-    // Switch ticket to KOL type automatically
-    selectedTicket = 'kol';
+    aCode=code;
+    selectedTicket='kol';
     document.getElementById('tc-solo').classList.remove('selected');
     document.getElementById('tc-kol').classList.add('selected');
     crEl.className='cr ok';
     crEl.textContent='✓ 已選擇 '+name+'（'+code+'）— 折扣後 NT$4,500';
-  } else {
-    aCode = null;
+  }else{
+    aCode=null;
     crEl.className='cr';
     crEl.textContent='';
   }
@@ -597,64 +584,105 @@ function selectKOL(code, el, name){
 
 document.getElementById('regForm').addEventListener('submit',async function(e){
   e.preventDefault();
-  const btn=document.getElementById('subBtn'), err=document.getElementById('errMsg');
+  const btn=document.getElementById('subBtn'),err=document.getElementById('errMsg');
   const member=document.querySelector('input[name=member]:checked')?.value;
   const region=document.querySelector('input[name=region]:checked')?.value;
   const pay=document.querySelector('input[name=pay]:checked')?.value;
   const sess=document.getElementById('f-sess').value;
   if(!member||!region||!pay||!sess){err.textContent='請完整填寫所有必選欄位';err.classList.add('on');return;}
-  btn.disabled=true; btn.textContent='⟳ 處理中...'; err.classList.remove('on');
-
-  const isKol = selectedTicket==='kol' && aCode;
-  const basePrice = 9800;
-  const discountAmount = isKol ? 5300 : 0;
-  const finalPrice = basePrice - discountAmount;
-
+  btn.disabled=true;btn.textContent='⟳ 處理中...';err.classList.remove('on');
+  const isKol=selectedTicket==='kol'&&aCode;
   const body={
     name:document.getElementById('f-name').value.trim(),
     email:document.getElementById('f-email').value.trim(),
     phone:document.getElementById('f-phone').value.trim(),
-    session:sess,
-    is_member:member,
-    region,
+    session:sess,is_member:member,region,
     payment:pay==='刷卡'?'credit_card':'transfer',
     referral_code:aCode||null,
-    ticket_type: isKol ? 'kol' : 'solo',
-    ticket_tier_id: isKol ? 1 : 2,
-    quantity: 1
+    ticket_type:isKol?'kol':'solo',
+    ticket_tier_id:isKol?1:2,
+    quantity:1
   };
-
   try{
-    // Step 1: Always save registration first
     const res=await fetch(API+'/api/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
     const d=await res.json();
-    if(!res.ok) throw new Error(d.error||'報名失敗');
-
+    if(!res.ok)throw new Error(d.error||'報名失敗');
     if(pay==='刷卡'){
-      // Credit card: show order confirm overlay, then redirect to payment
-      const ccLink = isKol ? CC_LINK_KOL : CC_LINK_SOLO;
-      document.getElementById('orderNo-cc').textContent = d.order_no;
-      document.getElementById('cc-pay-link').href = ccLink;
+      const ccLink=isKol?CC_LINK_KOL:CC_LINK_SOLO;
+      document.getElementById('orderNo-cc').textContent=d.order_no;
+      document.getElementById('cc-pay-link').href=ccLink;
       document.getElementById('sov-cc').classList.add('on');
-      // Auto-redirect after 2s
-      setTimeout(()=>{ window.location.href = ccLink; }, 2000);
+      setTimeout(()=>{window.location.href=ccLink;},2000);
       return;
     }
-
-    // Transfer → show success overlay
-    document.getElementById('orderNo').textContent = d.order_no;
+    document.getElementById('orderNo').textContent=d.order_no;
     document.getElementById('sov').classList.add('on');
-
   }catch(ex){
-    err.textContent=ex.message; err.classList.add('on');
+    err.textContent=ex.message;err.classList.add('on');
     btn.disabled=false;
-    const fp = (selectedTicket==='kol'&&aCode)?4500:9800;
+    const fp=(selectedTicket==='kol'&&aCode)?4500:9800;
     btn.innerHTML='立即完成報名 — NT$<span id="btnAmt">'+fp.toLocaleString()+'</span>';
   }
 });
 
 loadKOLs();
 updatePriceSummary();
+
+// ── COUNTDOWN to 2026/05/03 13:30 (Taiwan time) ──
+(function(){
+  const target = new Date('2026-05-03T13:30:00+08:00');
+  function tick(){
+    const now = new Date();
+    const diff = target - now;
+    const el = document.getElementById('cd');
+    if(!el) return;
+    if(diff <= 0){ el.textContent = '開課中！'; return; }
+    const d = Math.floor(diff / 864e5);
+    const h = Math.floor((diff % 864e5) / 36e5);
+    const m = Math.floor((diff % 36e5) / 6e4);
+    const s = Math.floor((diff % 6e4) / 1e3);
+    el.textContent = d+'天 '+String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+  }
+  tick();
+  setInterval(tick, 1000);
+})();
 </script>
+
+<!-- FLOATING KOL BUTTON -->
+<style>
+.float-kol{
+  position:fixed;bottom:24px;right:20px;z-index:200;
+  display:flex;align-items:center;gap:10px;
+  background:linear-gradient(135deg,var(--gold-d),var(--gold),var(--gold-l));
+  color:var(--ink);font-family:"Noto Sans TC",sans-serif;font-weight:700;
+  font-size:13px;letter-spacing:1.5px;
+  padding:13px 20px;
+  text-decoration:none;
+  box-shadow:0 6px 28px rgba(201,168,76,.45);
+  clip-path:polygon(10px 0%,100% 0%,calc(100% - 10px) 100%,0% 100%);
+  animation:floatPulse 2.4s ease-in-out infinite;
+  transition:transform .2s,box-shadow .2s;
+  white-space:nowrap;
+}
+.float-kol:hover{
+  transform:translateY(-3px);
+  box-shadow:0 10px 36px rgba(201,168,76,.6);
+  animation:none;
+}
+.float-kol .fk-icon{font-size:18px;flex-shrink:0;}
+@keyframes floatPulse{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-5px);}
+}
+@media(max-width:480px){
+  .float-kol{font-size:12px;padding:11px 15px;bottom:16px;right:12px;}
+}
+</style>
+
+<a class="float-kol" href="https://kolfufong.netlify.app/kol-apply" target="_blank">
+  <span class="fk-icon">🤝</span>
+  報名為合作 KOL
+</a>
+
 </body>
 </html>
