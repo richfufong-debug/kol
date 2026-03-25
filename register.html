@@ -248,6 +248,19 @@ label{display:block;font-size:13px;color:rgba(250,246,238,.7);letter-spacing:1px
     <img src="https://ik.imagekit.io/xxoczs7zvz/main_promote.jpeg" class="img-block" alt="課程宣傳">
   </div>
 
+  <!-- PROMO VIDEO -->
+  <div class="section">
+    <video
+      src="https://ik.imagekit.io/xxoczs7zvz/%E6%9C%AA%E5%91%BD%E5%90%8D%E8%A8%AD%E8%A8%88%20(1).mp4"
+      class="img-block"
+      autoplay
+      muted
+      loop
+      playsinline
+      style="border:1px solid var(--border);">
+    </video>
+  </div>
+
   <!-- SESSION -->
   <div class="section">
     <div style="font-family:'Noto Serif TC',serif;font-size:16px;color:var(--gold);
@@ -365,8 +378,22 @@ label{display:block;font-size:13px;color:rgba(250,246,238,.7);letter-spacing:1px
         <div class="fg">
           <label>付款方式 <span class="req">*</span></label>
           <div class="rg" style="flex-direction:column;gap:8px;">
-            <label class="ri"><input type="radio" name="pay" value="匯款" required><span>現金轉帳／匯款（請看上方匯款資訊）</span></label>
-            <label class="ri"><input type="radio" name="pay" value="刷卡"><span>信用卡線上刷卡 <strong style="color:var(--orange)">（提交後跳轉刷卡頁面）</strong></span></label>
+            <label class="ri"><input type="radio" name="pay" value="匯款" required onchange="toggleBankField()"><span>現金轉帳／匯款（請看上方匯款資訊）</span></label>
+            <label class="ri"><input type="radio" name="pay" value="刷卡" onchange="toggleBankField()"><span>信用卡線上刷卡 <strong style="color:var(--orange)">（提交後跳轉刷卡頁面）</strong></span></label>
+          </div>
+        </div>
+
+        <!-- 帳號後五碼 — shown only for transfer -->
+        <div class="fg" id="bank-field" style="display:none;">
+          <label>匯款帳號後五碼 <span class="req">*</span></label>
+          <input type="text" class="fi" id="f-bank5"
+            placeholder="請輸入您匯款帳號的後五碼"
+            maxlength="5"
+            pattern="\d{5}"
+            inputmode="numeric"
+            autocomplete="off">
+          <div style="font-size:11px;color:rgba(250,246,238,.35);margin-top:6px;">
+            ✦ 用於核對匯款，完成後工作人員將盡速確認
           </div>
         </div>
 
@@ -483,6 +510,20 @@ const CC_LINK_SOLO = 'https://core.newebpay.com/EPG/MS3386778646/zKBqtr';
 
 let aCode=null, selectedTicket='solo';
 
+function toggleBankField(){
+  const pay = document.querySelector('input[name=pay]:checked')?.value;
+  const field = document.getElementById('bank-field');
+  const input = document.getElementById('f-bank5');
+  if(pay === '匯款'){
+    field.style.display = 'block';
+    input.required = true;
+  } else {
+    field.style.display = 'none';
+    input.required = false;
+    input.value = '';
+  }
+}
+
 const kolItemStyle = `
   display:flex;align-items:center;justify-content:space-between;
   padding:11px 16px;border-bottom:1px solid rgba(201,168,76,.1);
@@ -590,6 +631,11 @@ document.getElementById('regForm').addEventListener('submit',async function(e){
   const pay=document.querySelector('input[name=pay]:checked')?.value;
   const sess=document.getElementById('f-sess').value;
   if(!member||!region||!pay||!sess){err.textContent='請完整填寫所有必選欄位';err.classList.add('on');return;}
+  // Validate bank field for transfer payment
+  const bank5 = document.getElementById('f-bank5').value.trim();
+  if(pay==='匯款' && !/^\d{5}$/.test(bank5)){
+    err.textContent='請輸入正確的匯款帳號後五碼（5位數字）';err.classList.add('on');return;
+  }
   btn.disabled=true;btn.textContent='⟳ 處理中...';err.classList.remove('on');
   const isKol=selectedTicket==='kol'&&aCode;
   const body={
@@ -601,12 +647,37 @@ document.getElementById('regForm').addEventListener('submit',async function(e){
     referral_code:aCode||null,
     ticket_type:isKol?'kol':'solo',
     ticket_tier_id:isKol?1:2,
-    quantity:1
+    quantity:1,
+    five_numbers_bank: pay==='匯款' ? bank5 : null
   };
   try{
     const res=await fetch(API+'/api/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
     const d=await res.json();
     if(!res.ok)throw new Error(d.error||'報名失敗');
+
+    // ── Send confirmation email for ALL payment types ──────────
+    try{
+      await fetch(API+'/api/send-confirmation',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          order_no: d.order_no,
+          name: body.name,
+          email: body.email,
+          phone: body.phone,
+          session: body.session,
+          payment: body.payment,
+          ticket_type: body.ticket_type,
+          referral_code: body.referral_code,
+          amount: isKol ? 4500 : 9800
+        })
+      });
+    }catch(emailErr){
+      // Email failure is non-blocking — registration already saved
+      console.warn('確認信寄送失敗：', emailErr);
+    }
+    // ──────────────────────────────────────────────────────────
+
     if(pay==='刷卡'){
       const ccLink=isKol?CC_LINK_KOL:CC_LINK_SOLO;
       document.getElementById('orderNo-cc').textContent=d.order_no;
