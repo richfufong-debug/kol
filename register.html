@@ -171,8 +171,7 @@ label{display:block;font-size:13px;color:rgba(250,246,238,.7);letter-spacing:1px
         id="promoVid"
         src="https://ik.imagekit.io/xxoczs7zvz/%E6%9C%AA%E5%91%BD%E5%90%8D%E8%A8%AD%E8%A8%88%20(1).mp4"
         playsinline
-        preload="metadata"
-        controls
+        preload="none"
       ></video>
       <div class="vid-overlay" id="vidOverlay">
         <div class="vid-play-btn">
@@ -543,25 +542,30 @@ document.getElementById('regForm').addEventListener('submit',async function(e){
   const overlay = document.getElementById('vidOverlay');
   if(!vid || !overlay) return;
 
-  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-
-  if(isMobile){
-    // Mobile: hide custom overlay, let native <video controls> handle everything
-    // iOS and Android require the tap to land directly on the video element
-    overlay.style.display = 'none';
-  } else {
-    // Desktop: remove native controls, use custom gold play button overlay
-    vid.removeAttribute('controls');
-    overlay.addEventListener('click', function(){
-      if(vid.paused){
-        vid.play().then(function(){ overlay.classList.add('playing'); }).catch(function(){});
-      } else {
-        vid.pause();
-        overlay.classList.remove('playing');
-      }
-    });
-    vid.addEventListener('ended', function(){ overlay.classList.remove('playing'); });
+  // On tap/click of overlay: hide overlay, add native controls, then play
+  // This way the play() call happens in direct response to user gesture = allowed on iOS/Android
+  function startVideo(){
+    overlay.style.display = 'none';       // hide our custom button
+    vid.setAttribute('controls', '');     // show native controls for pause/seek
+    var p = vid.play();
+    if(p !== undefined){
+      p.catch(function(err){ 
+        console.warn('play blocked:', err);
+        overlay.style.display = 'flex';   // show button again if blocked
+        vid.removeAttribute('controls');
+      });
+    }
   }
+
+  // Works on both desktop (click) and mobile (touch)
+  overlay.addEventListener('click', startVideo);
+
+  // Also handle video ending — show play button again
+  vid.addEventListener('ended', function(){
+    overlay.style.display = 'flex';
+    vid.removeAttribute('controls');
+    vid.load(); // reset to beginning
+  });
 })();
 
 loadKOLs();
