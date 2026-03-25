@@ -135,7 +135,7 @@ async function sendConfirmationEmail(data) {
   // IMPORTANT: `from` must use your VERIFIED domain in Resend.
   // Log into resend.com → Domains to confirm which domain is verified.
   // Common options: noreply@fufong.com.tw  OR  noreply@mail.fufong.com.tw
-  const fromAddress = "富豐企管 <onboarding@resend.dev>";
+  const fromAddress = "富豐企管 <noreply@rich3051.tw>";
 
   const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
