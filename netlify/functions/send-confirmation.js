@@ -176,7 +176,7 @@ exports.handler = async (event) => {
         Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: `富豐企管 <${process.env.ADMIN_EMAIL}>`,
+        from: "富豐企管 <onboarding@resend.dev>",
         to: [email],
         subject: `【報名確認】四季贏家選股策略班｜訂單 ${order_no}`,
         html,
