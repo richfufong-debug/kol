@@ -171,7 +171,7 @@ label{display:block;font-size:13px;color:rgba(250,246,238,.7);letter-spacing:1px
         id="promoVid"
         src="https://ik.imagekit.io/xxoczs7zvz/%E6%9C%AA%E5%91%BD%E5%90%8D%E8%A8%AD%E8%A8%88%20(1).mp4"
         playsinline
-        preload="none"
+        preload="metadata"
       ></video>
       <div class="vid-overlay" id="vidOverlay">
         <div class="vid-play-btn">
@@ -545,15 +545,30 @@ document.getElementById('regForm').addEventListener('submit',async function(e){
   // On tap/click of overlay: hide overlay, add native controls, then play
   // This way the play() call happens in direct response to user gesture = allowed on iOS/Android
   function startVideo(){
-    overlay.style.display = 'none';       // hide our custom button
-    vid.setAttribute('controls', '');     // show native controls for pause/seek
-    var p = vid.play();
-    if(p !== undefined){
-      p.catch(function(err){ 
-        console.warn('play blocked:', err);
-        overlay.style.display = 'flex';   // show button again if blocked
-        vid.removeAttribute('controls');
+    overlay.style.display = 'none';
+    vid.setAttribute('controls', '');
+
+    function doPlay(){
+      var p = vid.play();
+      if(p !== undefined){
+        p.catch(function(err){
+          console.warn('play blocked:', err);
+          overlay.style.display = 'flex';
+          vid.removeAttribute('controls');
+        });
+      }
+    }
+
+    // If video hasn't loaded enough data yet, wait for it
+    if(vid.readyState < 3){
+      // Show a loading state on the controls bar while buffering
+      vid.load();
+      vid.addEventListener('canplay', function onReady(){
+        vid.removeEventListener('canplay', onReady);
+        doPlay();
       });
+    } else {
+      doPlay();
     }
   }
 
