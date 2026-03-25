@@ -173,7 +173,7 @@ label{display:block;font-size:13px;color:rgba(250,246,238,.7);letter-spacing:1px
         playsinline
         preload="metadata"
       ></video>
-      <div class="vid-overlay" id="vidOverlay" onclick="toggleVideo()">
+      <div class="vid-overlay" id="vidOverlay">
         <div class="vid-play-btn">
           <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
             <circle cx="40" cy="40" r="38" stroke="#C9A84C" stroke-width="2" fill="rgba(14,11,5,0.75)"/>
@@ -541,13 +541,41 @@ document.getElementById('regForm').addEventListener('submit',async function(e){
   const vid = document.getElementById('promoVid');
   const overlay = document.getElementById('vidOverlay');
   if(!vid || !overlay) return;
+
+  function playVideo(){
+    const promise = vid.play();
+    if(promise !== undefined){
+      promise.then(function(){
+        overlay.classList.add('playing');
+      }).catch(function(err){
+        console.warn('Video play failed:', err);
+        overlay.classList.remove('playing');
+      });
+    } else {
+      overlay.classList.add('playing');
+    }
+  }
+
   function toggleVideo(){
-    if(vid.paused){ vid.play(); overlay.classList.add('playing'); }
+    if(vid.paused){ playVideo(); }
     else { vid.pause(); overlay.classList.remove('playing'); }
   }
   window.toggleVideo = toggleVideo;
+
   vid.addEventListener('ended', function(){ overlay.classList.remove('playing'); });
-  vid.addEventListener('click', toggleVideo);
+
+  // Use both touchend and click — touchend fires first on mobile
+  // preventDefault stops the 300ms click delay and double-firing
+  overlay.addEventListener('touchend', function(e){
+    e.preventDefault();
+    toggleVideo();
+  }, {passive: false});
+
+  overlay.addEventListener('click', function(e){
+    // Only handle click on non-touch devices to avoid double-firing
+    if(!e.isTrusted || e.pointerType === 'touch') return;
+    toggleVideo();
+  });
 })();
 
 loadKOLs();
