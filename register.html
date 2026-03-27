@@ -128,15 +128,8 @@ label{display:block;font-size:13px;color:rgba(250,246,238,.7);letter-spacing:1px
 }
 
 /* ── VIDEO PLAYER ──────────────────────────────────────── */
-.vid-wrap{position:relative;width:100%;border:1px solid var(--border);background:#000;line-height:0;}
-.vid-wrap video{width:100%;display:block;max-height:520px;object-fit:contain;background:#000;}
-.vid-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .2s;}
-.vid-overlay:hover{background:rgba(0,0,0,.15);}
-.vid-play-btn{width:80px;height:80px;transition:transform .2s,opacity .2s;pointer-events:none;}
-.vid-play-btn svg{width:80px;height:80px;filter:drop-shadow(0 4px 16px rgba(201,168,76,.5));}
-.vid-overlay.playing .vid-play-btn{opacity:0;}
-.vid-overlay.playing:hover .vid-play-btn{opacity:0.65;}
-@media(max-width:640px){.vid-play-btn{width:64px;height:64px;}.vid-play-btn svg{width:64px;height:64px;}}
+.vid-wrap{width:100%;border:1px solid var(--border);background:#000;line-height:0;}
+.vid-wrap video{width:100%;display:block;max-height:520px;background:#000;}
 </style>
 </head>
 <body>
@@ -166,21 +159,16 @@ label{display:block;font-size:13px;color:rgba(250,246,238,.7);letter-spacing:1px
   </div>
 
   <div class="section">
-    <div class="vid-wrap" id="vidWrap">
+    <div class="vid-wrap">
       <video
         id="promoVid"
-        src="https://ik.imagekit.io/xxoczs7zvz/%E6%9C%AA%E5%91%BD%E5%90%8D%E8%A8%AD%E8%A8%88%20(1).mp4"
+        src="/promotion.mp4"
         playsinline
         preload="metadata"
+        controls
+        controlsList="nodownload"
+        style="width:100%;display:block;background:#000;"
       ></video>
-      <div class="vid-overlay" id="vidOverlay">
-        <div class="vid-play-btn">
-          <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="40" cy="40" r="38" stroke="#C9A84C" stroke-width="2" fill="rgba(14,11,5,0.75)"/>
-            <polygon points="32,24 60,40 32,56" fill="#C9A84C"/>
-          </svg>
-        </div>
-      </div>
     </div>
   </div>
 
@@ -536,52 +524,7 @@ document.getElementById('regForm').addEventListener('submit',async function(e){
 });
 
 
-// ── VIDEO PLAYER ────────────────────────────────────────
-(function(){
-  const vid = document.getElementById('promoVid');
-  const overlay = document.getElementById('vidOverlay');
-  if(!vid || !overlay) return;
 
-  // On tap/click of overlay: hide overlay, add native controls, then play
-  // This way the play() call happens in direct response to user gesture = allowed on iOS/Android
-  function startVideo(){
-    overlay.style.display = 'none';
-    vid.setAttribute('controls', '');
-
-    function doPlay(){
-      var p = vid.play();
-      if(p !== undefined){
-        p.catch(function(err){
-          console.warn('play blocked:', err);
-          overlay.style.display = 'flex';
-          vid.removeAttribute('controls');
-        });
-      }
-    }
-
-    // If video hasn't loaded enough data yet, wait for it
-    if(vid.readyState < 3){
-      // Show a loading state on the controls bar while buffering
-      vid.load();
-      vid.addEventListener('canplay', function onReady(){
-        vid.removeEventListener('canplay', onReady);
-        doPlay();
-      });
-    } else {
-      doPlay();
-    }
-  }
-
-  // Works on both desktop (click) and mobile (touch)
-  overlay.addEventListener('click', startVideo);
-
-  // Also handle video ending — show play button again
-  vid.addEventListener('ended', function(){
-    overlay.style.display = 'flex';
-    vid.removeAttribute('controls');
-    vid.load(); // reset to beginning
-  });
-})();
 
 loadKOLs();
 updatePriceSummary();
