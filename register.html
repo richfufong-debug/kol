@@ -291,7 +291,7 @@ label{display:block;font-size:13px;color:rgba(250,246,238,.7);letter-spacing:1px
         <div class="fg" id="kol-section">
           <label>KOL 推薦碼 <span class="opt">（選填，驗證成功後折扣至 NT$4,500）</span></label>
           <div class="code-row">
-            <input type="text" class="fi" id="f-kol-code" placeholder="請輸入推薦碼（例如：KOL-ABC123）" autocomplete="off" style="text-transform:uppercase;letter-spacing:2px;">
+            <input type="text" class="fi" id="f-kol-code" placeholder="請輸入推薦碼（例如：KOL009）" autocomplete="off">
             <button type="button" class="vbtn" id="kol-verify-btn" onclick="verifyKolCode()">驗證</button>
           </div>
           <div class="cr" id="cr-sel"></div>
@@ -445,19 +445,19 @@ async function verifyKolCode(){
   const input=document.getElementById('f-kol-code');
   const crEl=document.getElementById('cr-sel');
   const btn=document.getElementById('kol-verify-btn');
-  const code=input.value.trim().toUpperCase();
+  const code=input.value.trim();
   if(!code){crEl.className='cr err';crEl.style.display='flex';crEl.textContent='✗ 請輸入推薦碼';return;}
   btn.disabled=true;btn.textContent='驗證中…';
   crEl.className='cr';crEl.style.display='none';
   try{
-    const res=await fetch(API+'/api/kols/validate/'+encodeURIComponent(code));
+    const res=await fetch(API+'/.netlify/functions/kols-validate?code='+encodeURIComponent(code));
     const d=await res.json();
     if(res.ok&&d.valid){
-      aCode=code;selectedTicket='kol';
+      aCode=d.referral_code;selectedTicket='kol';
       document.getElementById('tc-solo').classList.remove('selected');
       document.getElementById('tc-kol').classList.add('selected');
       crEl.className='cr ok';crEl.style.display='flex';
-      crEl.textContent='✓ 推薦碼有效（'+code+'）— 折扣後 NT$4,500';
+      crEl.textContent='✓ 推薦碼有效（'+d.referral_code+(d.username?' · '+d.username:'')+'）— 折扣後 NT$4,500';
       updatePriceSummary();
     }else{
       aCode=null;
