@@ -10,7 +10,8 @@ exports.handler = async (event) => {
   }
 
   // Code comes from query string (set by netlify.toml redirect)
-  const code = (event.queryStringParameters?.code || "").trim().toUpperCase();
+  // Do NOT uppercase — codes like "Realname448" are mixed-case in the DB
+  const code = (event.queryStringParameters?.code || "").trim();
 
   if (!code) {
     return {
@@ -27,10 +28,11 @@ exports.handler = async (event) => {
 
   try {
     await client.connect();
+    // ILIKE = case-insensitive match so "kol009" matches "KOL009", etc.
     const result = await client.query(
       `SELECT referral_code, username
        FROM kols
-       WHERE referral_code = $1 AND is_active = true
+       WHERE referral_code ILIKE $1 AND is_active = true
        LIMIT 1`,
       [code]
     );
@@ -46,13 +48,15 @@ exports.handler = async (event) => {
       };
     }
 
+    const kol = result.rows[0];
     return {
       statusCode: 200,
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
       },
-      body: JSON.stringify({ valid: true, kol: result.rows[0] }),
+      // Return canonical referral_code from DB so frontend always stores the correct casing
+      body: JSON.stringify({ valid: true, referral_code: kol.referral_code, username: kol.username }),
     };
   } catch (err) {
     console.error(err);
