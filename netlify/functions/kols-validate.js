@@ -1,7 +1,5 @@
 // netlify/functions/kols-validate.js
 // Route: GET /api/kols/validate/:code
-// Netlify maps this via netlify.toml redirect:
-//   /api/kols/validate/:code  →  /.netlify/functions/kols-validate?code=:code
 const { Client } = require("pg");
 
 exports.handler = async (event) => {
@@ -9,9 +7,8 @@ exports.handler = async (event) => {
     return { statusCode: 405, body: "Method Not Allowed" };
   }
 
-  // Code comes from query string (set by netlify.toml redirect)
-  // Do NOT uppercase — codes like "Realname448" are mixed-case in the DB
   const code = (event.queryStringParameters?.code || "").trim();
+  console.log("kols-validate called, code:", code);
 
   if (!code) {
     return {
@@ -28,22 +25,29 @@ exports.handler = async (event) => {
 
   try {
     await client.connect();
-    // ILIKE = case-insensitive match so "kol009" matches "KOL009", etc.
+
+    // ILIKE = case-insensitive; is_active::text handles boolean or string 'true'
     const result = await client.query(
-      `SELECT referral_code, username
+      `SELECT referral_code, username, is_active
        FROM kols
-       WHERE referral_code ILIKE $1 AND is_active = true
+       WHERE referral_code ILIKE $1
+         AND (is_active = true OR is_active::text = 'true')
        LIMIT 1`,
       [code]
     );
+    console.log("DB result rows:", JSON.stringify(result.rows));
 
     if (result.rows.length === 0) {
+      // Debug: check if code exists at all regardless of is_active
+      const anyResult = await client.query(
+        `SELECT referral_code, is_active FROM kols WHERE referral_code ILIKE $1 LIMIT 1`,
+        [code]
+      );
+      console.log("Exists ignoring is_active?", JSON.stringify(anyResult.rows));
+
       return {
         statusCode: 200,
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-        },
+        headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
         body: JSON.stringify({ valid: false }),
       };
     }
@@ -51,19 +55,15 @@ exports.handler = async (event) => {
     const kol = result.rows[0];
     return {
       statusCode: 200,
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-      },
-      // Return canonical referral_code from DB so frontend always stores the correct casing
+      headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
       body: JSON.stringify({ valid: true, referral_code: kol.referral_code, username: kol.username }),
     };
   } catch (err) {
-    console.error(err);
+    console.error("DB error:", err);
     return {
       statusCode: 500,
       headers: { "Access-Control-Allow-Origin": "*" },
-      body: JSON.stringify({ error: "Database error" }),
+      body: JSON.stringify({ error: "Database error", detail: err.message }),
     };
   } finally {
     await client.end();
