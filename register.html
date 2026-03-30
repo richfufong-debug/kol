@@ -289,12 +289,13 @@ label{display:block;font-size:13px;color:rgba(250,246,238,.7);letter-spacing:1px
         </div>
 
         <div class="fg" id="kol-section">
-          <label>推薦 KOL <span class="opt">（選填，選擇後折扣至 NT$4,500）</span></label>
-          <div id="kol-list-wrap" style="border:1px solid var(--border);background:rgba(255,255,255,.02);max-height:220px;overflow-y:auto;">
-            <div id="kol-loading" style="padding:14px 16px;font-size:13px;color:rgba(250,246,238,.4);">⟳ 載入 KOL 名單中...</div>
+          <label>KOL 推薦碼 <span class="opt">（選填，驗證成功後折扣至 NT$4,500）</span></label>
+          <div class="code-row">
+            <input type="text" class="fi" id="f-kol-code" placeholder="請輸入推薦碼（例如：KOL-ABC123）" autocomplete="off" style="text-transform:uppercase;letter-spacing:2px;">
+            <button type="button" class="vbtn" id="kol-verify-btn" onclick="verifyKolCode()">驗證</button>
           </div>
           <div class="cr" id="cr-sel"></div>
-          <div style="font-size:11px;color:rgba(250,246,238,.28);margin-top:6px;">✦ 選擇推薦 KOL 後票價折扣為 NT$4,500（不論付款方式）</div>
+          <div style="font-size:11px;color:rgba(250,246,238,.28);margin-top:6px;">✦ 驗證成功後票價自動折扣為 NT$4,500（不論付款方式）</div>
         </div>
 
         <div class="ps">
@@ -401,12 +402,21 @@ function toggleBankField(){
   else{field.style.display='none';input.required=false;input.value='';}
 }
 
-const kolItemStyle=`display:flex;align-items:center;justify-content:space-between;padding:11px 16px;border-bottom:1px solid rgba(201,168,76,.1);cursor:pointer;transition:background .15s;font-size:14px;`;
+
 
 function selectTicket(type){
   selectedTicket=type;
   document.getElementById('tc-solo').classList.toggle('selected',type==='solo');
   document.getElementById('tc-kol').classList.toggle('selected',type==='kol');
+  if(type==='kol'){
+    // if no code verified yet, focus the input
+    if(!aCode) setTimeout(()=>{const inp=document.getElementById('f-kol-code');if(inp)inp.focus();},200);
+  } else {
+    // deselect KOL discount when switching back to solo
+    aCode=null;
+    const crEl=document.getElementById('cr-sel');
+    crEl.className='cr';crEl.style.display='none';
+  }
   updatePriceSummary();
   const kolSec=document.getElementById('kol-section');
   kolSec.style.border=type==='kol'?'1px solid rgba(39,174,96,.4)':'';
@@ -431,50 +441,51 @@ function updatePriceSummary(){
   document.getElementById('btnAmt').textContent=final.toLocaleString();
 }
 
-async function loadKOLs(){
-  const wrap=document.getElementById('kol-list-wrap');
+async function verifyKolCode(){
+  const input=document.getElementById('f-kol-code');
+  const crEl=document.getElementById('cr-sel');
+  const btn=document.getElementById('kol-verify-btn');
+  const code=input.value.trim().toUpperCase();
+  if(!code){crEl.className='cr err';crEl.style.display='flex';crEl.textContent='✗ 請輸入推薦碼';return;}
+  btn.disabled=true;btn.textContent='驗證中…';
+  crEl.className='cr';crEl.style.display='none';
   try{
-    const ks=await(await fetch(API+'/api/kols/list')).json();
-    wrap.innerHTML='';
-    if(!ks||ks.length===0){wrap.innerHTML='<div style="padding:14px 16px;font-size:13px;color:rgba(250,246,238,.4);">目前無可用 KOL 名單</div>';return;}
-    const none=document.createElement('div');
-    none.style.cssText=kolItemStyle+'color:rgba(250,246,238,.5);';
-    none.setAttribute('data-code','');
-    none.innerHTML='<span>— 不使用推薦 KOL —</span><span style="font-size:12px;color:rgba(250,246,238,.3);">原價 NT$9,800</span>';
-    none.addEventListener('click',()=>selectKOL('',none,''));
-    wrap.appendChild(none);
-    ks.forEach(k=>{
-      const row=document.createElement('div');
-      row.style.cssText=kolItemStyle;
-      row.setAttribute('data-code',k.referral_code);
-      row.innerHTML=`<span style="color:var(--cream);"><strong style="color:var(--gold-l);">${k.username}</strong><span style="font-size:11px;color:rgba(250,246,238,.35);margin-left:8px;">${k.referral_code}</span></span><span style="color:var(--green-l);font-size:13px;font-weight:700;">NT$4,500</span>`;
-      row.addEventListener('mouseenter',()=>{if(!row.classList.contains('kol-selected'))row.style.background='rgba(201,168,76,.07)';});
-      row.addEventListener('mouseleave',()=>{if(!row.classList.contains('kol-selected'))row.style.background='';});
-      row.addEventListener('click',()=>selectKOL(k.referral_code,row,k.username));
-      wrap.appendChild(row);
-    });
+    const res=await fetch(API+'/api/kols/validate/'+encodeURIComponent(code));
+    const d=await res.json();
+    if(res.ok&&d.valid){
+      aCode=code;selectedTicket='kol';
+      document.getElementById('tc-solo').classList.remove('selected');
+      document.getElementById('tc-kol').classList.add('selected');
+      crEl.className='cr ok';crEl.style.display='flex';
+      crEl.textContent='✓ 推薦碼有效（'+code+'）— 折扣後 NT$4,500';
+      updatePriceSummary();
+    }else{
+      aCode=null;
+      crEl.className='cr err';crEl.style.display='flex';
+      crEl.textContent='✗ 推薦碼無效或已停用，請確認後再試';
+      updatePriceSummary();
+    }
   }catch(e){
-    wrap.innerHTML='<div style="padding:14px 16px;font-size:13px;color:rgba(250,246,238,.35);">無法載入 KOL 名單，請重新整理頁面</div>';
+    crEl.className='cr err';crEl.style.display='flex';
+    crEl.textContent='✗ 驗證失敗，請稍後再試';
   }
+  btn.disabled=false;btn.textContent='驗證';
 }
 
-function selectKOL(code,el,name){
-  document.querySelectorAll('#kol-list-wrap [data-code]').forEach(r=>{r.classList.remove('kol-selected');r.style.background='';r.style.borderLeft='';});
-  el.classList.add('kol-selected');
-  el.style.background=code?'rgba(39,174,96,.1)':'rgba(201,168,76,.07)';
-  el.style.borderLeft=code?'3px solid var(--green-l)':'3px solid rgba(201,168,76,.4)';
-  const crEl=document.getElementById('cr-sel');
-  if(code){
-    aCode=code;selectedTicket='kol';
-    document.getElementById('tc-solo').classList.remove('selected');
-    document.getElementById('tc-kol').classList.add('selected');
-    crEl.className='cr ok';
-    crEl.textContent='✓ 已選擇 '+name+'（'+code+'）— 折扣後 NT$4,500';
-  }else{
-    aCode=null;crEl.className='cr';crEl.textContent='';
+// clear discount if code is manually edited after a successful verify
+document.addEventListener('DOMContentLoaded',function(){
+  const inp=document.getElementById('f-kol-code');
+  if(inp){
+    inp.addEventListener('input',function(){
+      const crEl=document.getElementById('cr-sel');
+      if(aCode){
+        aCode=null;
+        crEl.className='cr';crEl.style.display='none';
+        updatePriceSummary();
+      }
+    });
   }
-  updatePriceSummary();
-}
+});
 
 document.getElementById('regForm').addEventListener('submit',async function(e){
   e.preventDefault();
@@ -526,7 +537,6 @@ document.getElementById('regForm').addEventListener('submit',async function(e){
 
 
 
-loadKOLs();
 updatePriceSummary();
 
 (function(){
