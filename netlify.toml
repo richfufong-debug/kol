@@ -15,8 +15,8 @@
   status = 200
 
 [[redirects]]
-  from = "/api/kols/validate/:code"
-  to = "/.netlify/functions/kols-validate?code=:code"
+  from = "/api/kols/validate/*"
+  to = "/.netlify/functions/kols-validate?code=:splat"
   status = 200
 
 [[redirects]]
@@ -39,12 +39,11 @@
   to = "/.netlify/functions/kol-reject"
   status = 200
 
-# ✅ NEW: NewebPay payment webhook (NotifyURL)
 [[redirects]]
   from = "/api/payment-callback"
   to = "/.netlify/functions/payment-callback"
   status = 200
-# Dynamic payment form generator
+
 [[redirects]]
   from = "/api/create-payment"
   to = "/.netlify/functions/create-payment"
